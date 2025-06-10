@@ -1,0 +1,33 @@
+# === Django / Backend ===
+*.pyc
+__pycache__/
+.env
+.env.*
+
+# Django media & static
+/media/
+/staticfiles/
+/static_root/
+/media_root/
+
+# VSCode
+.vscode/
+.idea/
+
+# Migration cache
+**/migrations/*.pyc
+**/migrations/__pycache__/
+**/migrations/*.sqlite3
+**/migrations/*.log
+
+# === React / Frontend ===
+frontend/node_modules/
+frontend/dist/
+frontend/.vite/
+frontend/.env
+frontend/.DS_Store
+
+# === OS ve Editor Bazlı ===
+*.log
+.DS_Store
+Thumbs.db
