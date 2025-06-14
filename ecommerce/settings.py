@@ -69,16 +69,12 @@ WSGI_APPLICATION = 'ecommerce.wsgi.application'
 
 ''' PostgreSQL Yapilandirma '''
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'EcommerceDB',
-        'USER': 'postgres',
-        'PASSWORD': '12345',
-        'HOST': 'localhost',
-        'PORT': '5432',
-    }
+    'default': dj_database_url.config(
+        default='postgres://postgres:12345@localhost:5432/EcommerceDB',
+        conn_max_age=600,
+        ssl_require=False
+    )
 }
-
 
 # Password validation
 
@@ -137,10 +133,10 @@ SIMPLE_JWT = {
     "AUTH_TOKEN_CLASSES": ("rest_framework_simplejwt.tokens.AccessToken",),
 }
 
-CORS_ALLOWED_ORIGINS = [
-    "http://localhost:3000",
-    "http://localhost:5173",
-]
+# CORS_ALLOWED_ORIGINS
+
+CORS_ALLOW_ALL_ORIGINS = True
+
 APPEND_SLASH = False
 
 SPECTACULAR_SETTINGS = {
