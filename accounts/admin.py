@@ -15,7 +15,7 @@ class CustomUserAdmin(BaseUserAdmin):
 
     fieldsets = (
         (None, {"fields": ("email", "password")}),
-        ("Kişisel Bilgiler", {"fields": ("first_name", "last_name", "phone", "birth_date", "address", "city", "country", "profile_picture")}),
+        ("Kişisel Bilgiler", {"fields": ("first_name", "last_name", "username", "phone", "birth_date", "address", "city", "country", "profile_picture")}),
         ("Roller ve Durum", {"fields": ("role", "is_active", "is_staff", "is_superuser")}),
         ("Doğrulama", {"fields": ("email_verified", "phone_verified")}),
         ("Tarihler", {"fields": ("last_login", "date_joined", "last_updated")}),
@@ -25,7 +25,7 @@ class CustomUserAdmin(BaseUserAdmin):
     add_fieldsets = (
         (None, {
             "classes": ("wide",),
-            "fields": ("email", "first_name", "last_name", "phone", "password1", "password2", "role", "is_active", "is_staff", "is_superuser"),
+            "fields": ("email", "first_name", "last_name", "username", "phone", "password1", "password2", "role", "is_active", "is_staff", "is_superuser"),
         }),
     )
 

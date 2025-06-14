@@ -21,6 +21,7 @@ class CustomUserManager(BaseUserManager):
             raise ValueError("Email zorunlu!")
         email = self.normalize_email(email)
         user = self.model(email=email, **extra_fields)
+        user.username = email
         user.set_password(password)
         user.save()
         return user
@@ -47,6 +48,12 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     
     first_name = models.CharField(max_length=80)
     last_name = models.CharField(max_length=80)
+    username = models.CharField(
+        max_length=150,
+        unique=True,
+        blank=True,
+        null=True
+    )
     email = models.EmailField(
         unique=True, 
         verbose_name="E-posta",
