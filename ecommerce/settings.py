@@ -7,14 +7,9 @@ import dj_database_url
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
-# SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.environ.get('SECRET_KEY', '0w(-1nw#d8h5bqo4z)*w=wj2u2ej+j6m1wjm5m$+0@zp3+z&hx')
 
-# SECRET_KEY = 'django-insecure-309qxv!&=_3u(9&$jpi@pfcoew&1brvb!4xznb(g&uco^n&7gp'
-
-# SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get('DEBUG', 'False') == 'True'
-
 
 ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', '*').split(',')
 
