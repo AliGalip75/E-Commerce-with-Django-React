@@ -11,6 +11,10 @@ SECRET_KEY = os.environ.get('SECRET_KEY', '0w(-1nw#d8h5bqo4z)*w=wj2u2ej+j6m1wjm5
 
 DEBUG = os.environ.get('DEBUG', 'False') == 'True'
 
+ALLOWED_HOSTS = [
+    'ecommerce-backend.onrender.com',
+]
+
 ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', '*').split(',')
 
 
@@ -31,6 +35,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
