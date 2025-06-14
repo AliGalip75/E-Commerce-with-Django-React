@@ -14,11 +14,11 @@ import {
 const ProfileMenu = () => {
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger className="text-zinc-950 dark:text-white">
+      <DropdownMenuTrigger className="text-zinc-950 dark:text-white">                    
         <BiUser size={20} />
       </DropdownMenuTrigger>
 
-      <DropdownMenuContent className="w-30 z-[200] md:me-0 mt-6 me-3 dark:bg-zinc-800 dark:text-white">
+      <DropdownMenuContent className="w-30 z-[200] md:me-0 mt-8 me-3 dark:bg-zinc-800 dark:text-white">
         <DropdownMenuItem asChild className="dark:hover:bg-zinc-700 flex justify-center">
           <Link to="/accounts/login/">Giriş Yap</Link>
         </DropdownMenuItem>
