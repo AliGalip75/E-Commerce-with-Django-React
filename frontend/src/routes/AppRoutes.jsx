@@ -2,6 +2,7 @@ import { Routes, Route } from 'react-router-dom';
 import MainLayout from '../layouts/MainLayout';
 
 import Home from '../pages/Home';
+import Cart from '../pages/Cart';
 import Login from '../pages/Login';
 import Register from '../pages/Register';
 import ProductDetail from '../pages/ProductDetail';
@@ -12,6 +13,7 @@ const AppRoute = () => {
         <Routes>
             <Route path='/' element={<MainLayout />}>
                 <Route index element={<Home />} />
+                <Route path='cart' element={<Cart />} />
                 <Route path='products/:id' element={<ProductDetail />} />
             </Route>
             <Route path='/accounts/' element={<AccountLayout />}>

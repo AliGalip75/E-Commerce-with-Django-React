@@ -1,17 +1,16 @@
 import { Link } from "react-router-dom";
 import { Input } from "@/components/ui/input";
 import ProfileMenu from "@/components/ProfileMenu";
-import { FiShoppingCart } from "react-icons/fi";
-import { BiUser } from "react-icons/bi";
+import CartIcon from "./ui/CartIcon";
 
 
 const Navbar = () => {
   return (
-    <header className="bg-white/30 dark:bg-zinc-900/30 backdrop-blur-[2px] shadow-md sticky top-0 z-[100]">
-      <div className="container mx-auto flex items-center justify-between py-5 px-4">
+    <header className="bg-white dark:bg-zinc-900 shadow-md sticky top-0 z-[100]">
+      <div className="container md:mx-auto flex items-center justify-between py-5">
         
         {/* Logo & Marka */}
-        <Link to="/" className="flex items-center gap-2 font-semibold text-xl">
+        <Link to="/" className="flex ms-5 md:mx-0 items-center gap-2 font-semibold text-xl">
           <svg
               xmlns="http://www.w3.org/2000/svg"
               viewBox="0 0 512 512"
@@ -21,25 +20,23 @@ const Navbar = () => {
                   <path d="M3510 4504 c-6 -16 -178 -501 -381 -1079 l-370 -1050 322 -915 c177 -503 336 -946 354 -985 104 -227 257 -376 455 -441 50 -16 108 -18 644 -22 565 -3 588 -3 582 15 -4 10 -363 1026 -798 2258 -434 1232 -792 2242 -794 2244 -2 2 -8 -9 -14 -25z"/>
               </g>
           </svg>
-          <span className="hidden sm:inline">Mytore</span>
+          <span className="hidden sm:inline select-none">Mytore</span>
         </Link>
 
         {/* Arama ve ikonlar */}
-        <div className="flex items-center gap-4">
+        <div className="flex me-10 md:mx-0 items-center gap-4">
           {/* Arama kutusu */}
           <div className="hidden md:block">
             <Input
               type="text"
-              placeholder="Ürün ara..."
-              className="w-64 bg-zinc-100 text-zinc-900 border-1 border-zinc-500"
+              placeholder="Lorem ipsum"
+              className="w-64 bg-zinc-100 text-zinc-900 dark:text-white border-1 border-zinc-500 select-none"
             />
           </div>
 
           {/* Profil ve Sepet */}
           <ProfileMenu />
-          <Link to="/cart" className="text-zinc-800 dark:text-white">
-            <FiShoppingCart size={20} />
-          </Link>
+          <CartIcon />
         </div>
       </div>
     </header>

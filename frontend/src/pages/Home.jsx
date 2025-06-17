@@ -1,69 +1,101 @@
-// src/components/Home.jsx (Örnek)
-import React, { useContext, useState } from 'react';
-import { AuthContext } from '../context/AuthContext'; // AuthContext'i import edin
-import { toast } from 'react-hot-toast';
-import axiosInstance from '@/api/AxiosInstance';
-import { useTheme } from "@/components/theme-provider";
-import { Button } from "@/components/ui/button";
+// Home.jsx
+import React, { useContext, useEffect, useRef, useState } from 'react';
+import { AuthContext } from '../context/AuthContext';
 import HeroBanner from "../components/HeroBanner";
-import ProductCard from "../components/ProductCard";
+import CategoryScroller from "@/components/CategoryScroller";
+import ProductCard from "@/components/ProductCard";
+import { FaArrowLeft, FaArrowRight, FaArrowDown } from "react-icons/fa";
+import axiosInstance from '@/api/AxiosInstance';
 
 const Home = () => {
-    const { user, loading } = useContext(AuthContext); // user, loading ve logout'u alın
-    const [products, setProducts] = useState([]);
+  const { user, loading } = useContext(AuthContext);
+  const [categories, setCategories] = useState([]);
+  const [products, setProducts] = useState([]);
+  const scrollRef = useRef(null);
 
-    if (loading) {
-        return <div>Yükleniyor...</div>; // Kullanıcı bilgileri yüklenirken bir yükleme göstergesi
+  useEffect(() => {
+    axiosInstance.get("categories/")
+      .then(res => setCategories(res.data))
+      .catch(err => console.error("Kategori hatası", err));
+  }, []);
+
+  useEffect(() => {
+    axiosInstance.get("products/")
+        .then(res => setProducts(res.data))
+        .catch(err => console.error("Ürün hatası", err));
+  }, []);
+
+
+  const scrollToSection = () => {
+    const element = document.getElementById("targetDiv");
+    if (element) {
+        element.scrollIntoView({ behavior: "smooth", block: "start" });
     }
+  };
 
-    if (!user) {
-        // Kullanıcı bilgisi yoksa (örneğin oturum açılmamışsa) login sayfasına yönlendirilebilir
-        // veya bir mesaj gösterilebilir.
-        return <div>Oturum açmadınız. Lütfen giriş yapın.</div>;
+  // Tıklanan butona göre kaydır
+  const handleScroll = (direction) => {
+    if (scrollRef.current) {
+        const scrollContainer = scrollRef.current;
+        // Ekran genişliğine göre kaydırma miktarı belirle
+        let dynamicAmount = 250;
+        const screenWidth = window.innerWidth;
+
+        if (screenWidth < 640) {
+            dynamicAmount = 150; // mobil
+        } else if (screenWidth < 1024) {
+            dynamicAmount = 200; // tablet
+        } else {
+            dynamicAmount = 400; // masaüstü
+        }
+
+        const delta = direction === 'left' ? -dynamicAmount : dynamicAmount;
+        scrollContainer.scrollBy({ left: delta, behavior: 'smooth' });
     }
+  };
 
-    const handle = () => {
-        toast.success("Ürünler Listelendi", {
-                style: {
-                    padding: '25px',
-                    boxShadow: "0 4px 10px 5px rgba(0, 0, 0, 0.15)",
-                    border: "1px solid #ddd",
-                    fontWeight: "600",
-                },
-            });
 
-        axiosInstance.get("products/")
-        .then(res => {
-            setProducts(res.data);
-        })
-        .catch(err => {
-            console.error("Ürünler alınamadı:", err);
-        });
-    }
+  if (loading) return <div>Yükleniyor...</div>;
+  if (!user) return <div>Oturum açmadınız. Lütfen giriş yapın.</div>;
 
-    return (
-        <>
-            <HeroBanner />
-            <div className="flex min-w-[100%] justify-center mt-5">
-                <Button onClick={handle} className="dark:bg-whitef">Ürünleri Getir</Button>
-            </div>
-            <div className="flex justify-center mt-5">
-                <div className="container">
-                    
+  return (
+    <>
+      <HeroBanner />
+      <div className="flex justify-center relative mt-5 mx-5">
+        <div className="flex items-center justify-between container">
+          <button
+            onClick={() => handleScroll("left")}
+            className="p-2 group"
+          >
+            <FaArrowLeft className="size-5 transform transition-all duration-300 group-hover:-translate-x-1.5  cursor-pointer"/>
+          </button>
 
-                    <div className="flex gap-5 flex-wrap justify-center">
-                        {products.map(product => (
-                                <ProductCard key={product.id} product={product} />
-                            ))}
-                    
-                    </div>
-                    
-                </div>
-            </div>
-            
-        </>
-        
-    );
+          <CategoryScroller categories={categories} scrollRef={scrollRef} />
+
+          <button
+            onClick={() => handleScroll("right")}
+            className="p-2 group"
+          >
+            <FaArrowRight className="size-5 transform transition-all duration-300 group-hover:translate-x-1.5  cursor-pointer"/>
+          </button>
+        </div>
+      </div>
+      <br/>
+      <div className="w-full h-[100px] flex justify-center items-center dark:text-white">
+        <div onClick={scrollToSection}
+            className="rounded-full border-3 animate-bounce border-zinc-800 bg-gray-100 dark:bg-zinc-900 p-4  cursor-pointer">
+            <FaArrowDown className="fill-current size-5"/>
+        </div>
+      </div>
+      <div id="targetDiv" className="flex justify-center flex-wrap pt-25">
+        <div className="container flex justify-center flex-wrap gap-10">
+            {products.map((product) => (
+                <ProductCard key={product.id} product={product} />
+            ))}
+        </div>
+      </div>
+    </>
+  );
 };
 
 export default Home;

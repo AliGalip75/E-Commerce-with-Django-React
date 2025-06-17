@@ -1,9 +1,25 @@
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import axiosInstance from "@/api/AxiosInstance";
+import toast from "react-hot-toast";
+import { useCart } from "@/context/CartContext"; 
 
 const ProductCard = ({ product }) => {
+
+  const { incrementCart } = useCart(); // CartContext'ten fonksiyonu al
+
+  const handleAddToCart = async (productId) => {
+    try {
+      await axiosInstance.post("cart/", { product_id: productId });
+      incrementCart();
+      toast.success("Ürün başarıyla eklendi");
+    } catch(error){
+      console.error("Sepete ekleme hatası", error);
+    }
+  }
+
   return (
-    <Card className="w-full max-w-sm rounded-2xl shadow-md bg-white dark:bg-zinc-900">
+    <Card className="w-full max-w-sm rounded-2xl shadow-md bg-white transform transition-all duration-400 hover:-translate-y-1 hover:shadow-lg dark:bg-zinc-900">
       {/* Ürün resmi */}
       <img
         src={product.image}
@@ -32,7 +48,7 @@ const ProductCard = ({ product }) => {
       </CardContent>
 
       <CardFooter className="p-4">
-        <Button className="w-full">Sepete Ekle</Button>
+        <Button onClick={() => handleAddToCart(product.id)} className="w-full cursor-pointer">Sepete Ekle</Button>
       </CardFooter>
     </Card>
   );

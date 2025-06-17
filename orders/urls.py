@@ -1,8 +1,7 @@
-
 from rest_framework.routers import DefaultRouter
-from .api.views import CartItemViewSet
+from .api.views import OrderViewSet
 
 router = DefaultRouter()
-router.register(r'', CartItemViewSet, basename='cart')
+router.register(r'', OrderViewSet, basename='orders')
 
 urlpatterns = router.urls

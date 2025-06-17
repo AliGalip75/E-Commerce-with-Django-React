@@ -62,27 +62,32 @@ const Login = () => {
     };
 
     return (
-        <div className="flex flex-col h-full">
+        <div className="flex flex-col h-full dark:text-gray-300">
+            
             <div className="h-[30%] flex justify-center items-end mt-5">
                 <Link to="/">
-                    <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        viewBox="0 0 512 512"
-                        className="w-40 fill-black">
-                        <g transform="translate(0,512) scale(0.1,-0.1)" stroke="none">
-                            <path d="M1791 5088 c-5 -13 -407 -1153 -894 -2534 -488 -1381 -889 -2518 -893 -2528 -6 -16 26 -17 582 -14 643 4 624 3 749 65 157 79 307 267 386 483 47 131 1591 4513 1597 4533 4 16 -37 17 -757 17 l-761 0 -9 -22z"/>
-                            <path d="M3510 4504 c-6 -16 -178 -501 -381 -1079 l-370 -1050 322 -915 c177 -503 336 -946 354 -985 104 -227 257 -376 455 -441 50 -16 108 -18 644 -22 565 -3 588 -3 582 15 -4 10 -363 1026 -798 2258 -434 1232 -792 2242 -794 2244 -2 2 -8 -9 -14 -25z"/>
-                        </g>
-                    </svg>
+                    <div className="drop-shadow-[0_0_8px_rgba(0,0,0,0.3)] dark:drop-shadow-[0_0_8px_rgba(255,255,255,0.5)]">
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            viewBox="0 0 512 512"
+                            className="w-40 fill-black dark:fill-white transition-all duration-300"
+                        >
+                            <g transform="translate(0,512) scale(0.1,-0.1)" stroke="none">
+                                <path d="M1791 5088 c-5 -13 -407 -1153 -894 -2534 -488 -1381 -889 -2518 -893 -2528 -6 -16 26 -17 582 -14 643 4 624 3 749 65 157 79 307 267 386 483 47 131 1591 4513 1597 4533 4 16 -37 17 -757 17 l-761 0 -9 -22z"/>
+                                <path d="M3510 4504 c-6 -16 -178 -501 -381 -1079 l-370 -1050 322 -915 c177 -503 336 -946 354 -985 104 -227 257 -376 455 -441 50 -16 108 -18 644 -22 565 -3 588 -3 582 15 -4 10 -363 1026 -798 2258 -434 1232 -792 2242 -794 2244 -2 2 -8 -9 -14 -25z"/>
+                            </g>
+                        </svg>
+                    </div>
+
                 </Link>
             </div>
             <div className="h-[70%] flex justify-center items-center mb-5">
-                <div className="min-w-md min-h-10/15 p-6 border border-gray-200 rounded-lg shadow-md bg-white"> 
-                    <h2 className="text-2xl font-semibold text-center mb-6 text-gray-800">Giriş Yap</h2>
+                <div className="min-w-md min-h-10/15 p-6 border-2 border-gray-200 rounded-lg shadow-md bg-white dark:bg-zinc-900 dark:text-white"> 
+                    <h2 className="text-2xl font-semibold text-center mb-6  dark:text-gray-200">Giriş Yap</h2>
                     <form onSubmit={handleLogin} className="space-y-5" noValidate>
                         {/* E-posta alanı */}
                         <div className="mb-5">
-                            <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">E-posta</label>
+                            <label htmlFor="email" className="block text-sm font-medium mb-1">E-posta</label>
                             <Input
                             type="email"
                             id="email"
@@ -96,7 +101,7 @@ const Login = () => {
                         {/* Parola alanı ve "Şifremi unuttum" */}
                         <div className="mb-5">
                             <div className="flex items-center justify-between mb-1">
-                            <label htmlFor="password" className="block text-sm font-medium text-gray-700">Parola</label>
+                            <label htmlFor="password" className="block text-sm font-medium">Parola</label>
                             <a href="/sifremi-unuttum" className="text-sm text-blue-600 hover:underline">Şifremi unuttum?</a>
                             </div>
                             <Input
@@ -112,7 +117,7 @@ const Login = () => {
                         {/* Giriş Yap butonu */}
                         <button
                             type="submit"
-                            className={"w-full bg-zinc-950 outline-1 text-white py-2 rounded hover:bg-zinc-900 flex flex-row justify-center items-center group h-[45px]"}
+                            className={"w-full bg-zinc-800 outline-1 text-white py-2 rounded hover:bg-zinc-950 flex flex-row justify-center items-center group h-[45px]"}
                         >
                             <div className="flex h-full">
                                 <h1 className="me-1 flex items-center h-full">Giriş yap</h1>
@@ -123,7 +128,7 @@ const Login = () => {
                         </button>
                     </form>
                     {/* Alt bilgi metni */}
-                    <p className="text-center mt-4 text-sm text-gray-600">
+                    <p className="text-center mt-4 text-sm dark:text-gray-200 text-gray-900">
                         Hesabın yok mu?{' '}
                         <Link to="/accounts/register" className="text-blue-600 hover:underline">
                         Kayıt Ol

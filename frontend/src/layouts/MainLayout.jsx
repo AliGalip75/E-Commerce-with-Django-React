@@ -21,7 +21,7 @@ const MainLayout = () => {
     <div className="flex flex-col min-h-screen bg-gray-100 dark:bg-zinc-900 text-gray-900 dark:text-white">
 
       <div className="bg-zinc-800 text-white text-sm py-2 text-center hidden md:block">
-        Ücretsiz kargo ve iade fırsatları! こ
+        Lorem ipsum dolor sit amet.
       </div>
 
 

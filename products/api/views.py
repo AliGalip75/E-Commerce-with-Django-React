@@ -11,6 +11,8 @@ class ProductViewSet(viewsets.ModelViewSet):
         return ProductWriteSerializer
     
 class CategoryViewSet(viewsets.ModelViewSet):
-    queryset = Category.objects.all()
     serializer_class = CategorySerializer
+    
+    def get_queryset(self):
+        return Category.objects.filter(parent__isnull=True)
     

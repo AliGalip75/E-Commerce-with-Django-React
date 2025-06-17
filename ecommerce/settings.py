@@ -3,7 +3,8 @@ import os
 from datetime import timedelta
 BASE_DIR = Path(__file__).resolve().parent.parent
 import dj_database_url
-
+from dotenv import load_dotenv
+load_dotenv() 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
@@ -11,9 +12,6 @@ SECRET_KEY = os.environ.get('SECRET_KEY', '0w(-1nw#d8h5bqo4z)*w=wj2u2ej+j6m1wjm5
 
 DEBUG = os.environ.get('DEBUG', 'False') == 'True'
 
-ALLOWED_HOSTS = [
-    'ecommerce-backend.onrender.com',
-]
 
 ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', '*').split(',')
 
@@ -29,6 +27,8 @@ INSTALLED_APPS = [
     'rest_framework_simplejwt',
     'accounts.apps.AccountsConfig',
     'products.apps.ProductsConfig',
+    'orders.apps.OrdersConfig',
+    'cart.apps.CartConfig',
     'corsheaders',
     'drf_spectacular',
 ]
@@ -46,6 +46,10 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'ecommerce.urls'
+
+# Şimdilik 
+# STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+
 
 TEMPLATES = [
     {
