@@ -10,7 +10,7 @@ from rest_framework import permissions
 from rest_framework import status
 from django.conf import settings
 from django.utils import timezone
-from rest_framework_simplejwt.exceptions import TokenError
+from .api.permissions import IsOwner
 
 # Giriş - access dön, refresh'i cookie'ye kaydet
 class CustomTokenObtainPairView(TokenObtainPairView):
@@ -45,6 +45,7 @@ class CustomTokenObtainPairView(TokenObtainPairView):
 
 # Çıkış – refresh cookie’sini sil
 class LogoutView(APIView):
+    permission_classes = [permissions.IsAuthenticated]
     def post(self, request):
         response = Response({"message": "Başaryıla çıkış yaptınız."}, status=status.HTTP_200_OK)
         response.delete_cookie("refresh_token", path="/api/accounts/")
@@ -68,12 +69,14 @@ class CookieTokenRefreshView(APIView):
 class CustomUserViewSet(viewsets.ModelViewSet):
     queryset = CustomUser.objects.all()
     
-    #Yapılan isteğe göre action belirle
     def get_serializer_class(self):
+        # profile ve update_profile için 
         if self.action in ['profile', 'update_profile']:
             return CustomUserCreateUpdateSerializer
+        # list, retrieve için:
         elif self.action in ['list', 'retrieve']:
             return CustomUserSerializer
+        # create, update, patch ve delete için
         return CustomUserCreateUpdateSerializer
 
     # Action'a göre özel permission 
@@ -83,7 +86,7 @@ class CustomUserViewSet(viewsets.ModelViewSet):
         elif self.action == 'create':
             return [permissions.AllowAny()]
         elif self.action in ['profile', 'update_profile']:
-            return [permissions.IsAuthenticated()]
+            return [IsOwner()]
         return super().get_permissions()
 
     # Aktif kullanıcının bilgilerini getir

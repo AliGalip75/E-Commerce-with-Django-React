@@ -1,17 +1,49 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import axiosInstance from '@/api/AxiosInstance';
 import CartItemCard from "@/components/CartItemCard";
 import OrderSummaryCard from "@/components/OrderSummaryCard";
+import { AuthContext } from "@/context/AuthContext";
+import { useCart } from "@/context/CartContext";
+import {
+  Alert,
+  AlertTitle,
+  AlertDescription
+} from "@/components/ui/alert";
 
 const Cart = () => {
 
     const [cartItems, setCartItems] = useState([]);
+    const { accessToken } = useContext(AuthContext);
+    const { resetCart } = useCart();
 
     useEffect(() => {
-        axiosInstance.get("cart/")
-        .then(res => setCartItems(res.data))
-        .catch(err => console.error("Sepet yüklenemedi", err));
-    }, []);
+        const fetchCart = async () => {
+            if (!accessToken) {
+                const localCart = JSON.parse(localStorage.getItem("cart")) || [];
+                const detailedCart = await Promise.all(
+                    localCart.map(async (item) => {
+                        const res = await axiosInstance.get(`/products/${item.product_id}/`);
+                        return {
+                            product: res.data,
+                            quantity: item.quantity
+                        };
+                    })
+                );
+                setCartItems(detailedCart);
+            } else {
+                const res = await axiosInstance.get("cart/");
+                setCartItems(res.data);
+            }
+        };
+        fetchCart();
+        resetCart();
+        // Eğer başka bir yerden tetiklenirse (örneğin login sonrası)
+        const handleCartUpdate = () => fetchCart();
+        window.addEventListener("cartUpdated", handleCartUpdate);
+        return () => window.removeEventListener("cartUpdated", handleCartUpdate);
+
+    }, [accessToken]);
+
 
     return (
         <div className="w-full flex justify-center">
@@ -20,16 +52,21 @@ const Cart = () => {
                     <div className="md:w-[75%] w-[100%]">
                         <h2 className="text-xl font-semibold mb-4">Sepetim</h2>
                         {cartItems.length === 0 ? (
-                            <p>Sepetiniz boş.</p>
+                            <Alert variant="default | destructive">
+                                <AlertTitle>Burası boş</AlertTitle>
+                                <AlertDescription>
+                                    Henüz sepete ürün eklemediniz.
+                                </AlertDescription>
+                            </Alert>
                         ) : (
                             <>
-                            <ul className="space-y-5">
-                                {cartItems.map(item => (
-                                    <li key={item.id}>
+                                <ul className="space-y-5">
+                                    {cartItems.map((item, index) => (
+                                        <li key={item.id || item.product_id || index}>
                                         <CartItemCard item={item} />
-                                    </li>
-                                ))}
-                            </ul>
+                                        </li>
+                                    ))}
+                                </ul>
                             </>
                         )}
                     </div>

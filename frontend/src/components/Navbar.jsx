@@ -20,7 +20,7 @@ const Navbar = () => {
                   <path d="M3510 4504 c-6 -16 -178 -501 -381 -1079 l-370 -1050 322 -915 c177 -503 336 -946 354 -985 104 -227 257 -376 455 -441 50 -16 108 -18 644 -22 565 -3 588 -3 582 15 -4 10 -363 1026 -798 2258 -434 1232 -792 2242 -794 2244 -2 2 -8 -9 -14 -25z"/>
               </g>
           </svg>
-          <span className="hidden sm:inline select-none">Mytore</span>
+          <span className="hidden sm:inline select-none">MyStore</span>
         </Link>
 
         {/* Arama ve ikonlar */}

@@ -1,8 +1,10 @@
-import React from "react";
-import {Button} from "@/components/ui/button";
+import React, { useContext } from "react";
+import { Button } from "@/components/ui/button";
 import toast from "react-hot-toast";
 import axiosInstance from "@/api/AxiosInstance";
 import { useNavigate } from 'react-router-dom';
+import { AuthContext } from '../context/AuthContext';
+import { useCart } from '../context/CartContext';
 
 
 const OrderSummaryCard = ({ items }) => {
@@ -12,13 +14,19 @@ const OrderSummaryCard = ({ items }) => {
   );
 
   const navigate = useNavigate();
+  const { resetCart } = useCart();
+  const { accessToken } = useContext(AuthContext);
   const KDV = total * 0.10;
   const finalTotal = total + KDV;
 
   const handleCheckout = async () => {
     try {
+      if (!accessToken) {
+        return navigate("/accounts/login", { state: { from: "/cart" } });
+      }
       await axiosInstance.post("orders/"); // backend sepetten alıyor
       toast.success("Sipariş oluşturuldu!");
+      resetCart();
       navigate("/");
     } catch (err) {
       toast.error("Sipariş oluşturulamadı!");
@@ -37,13 +45,13 @@ const OrderSummaryCard = ({ items }) => {
         <span>KDV ( %10 )</span>
         <span>{KDV.toFixed(0)} ₺</span>
       </div>
-      <div className="flex justify-between font-bold text-base mt-8">
-        <span>Genel Toplam</span>
+      <div className="flex justify-between text-md mt-8">
+        <span className="font-bold">Genel Toplam</span>
         <span>{finalTotal.toFixed(0)} ₺</span>
       </div>
       <div className="flex justify-end mt-5">
         <Button onClick={handleCheckout} className="cursor-pointer">
-            <span>Sipariş ver</span>
+          <span>Sipariş ver</span>
         </Button>
       </div>
     </div>

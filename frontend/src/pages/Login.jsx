@@ -4,13 +4,14 @@ import { AuthContext } from "../context/AuthContext";
 import { useNavigate, Link } from 'react-router-dom';
 import toast from "react-hot-toast";
 import { Input } from "@/components/ui/input";
+import { useCart } from "@/context/CartContext";
 
 const Login = () => {
     const { login, loading } = useContext(AuthContext);
 
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const navigate = useNavigate();
+    const { resetCart } = useCart();
 
     const handleLogin = async (e) => {
         e.preventDefault();
@@ -47,7 +48,6 @@ const Login = () => {
                 },
             }
         ).then((response) => {
-            console.log("Login response:", response.data); 
             const access = response.data.access;
             if (!access) {
                 toast.error("Token alınamadı. Lütfen tekrar giriş yapın.");
@@ -55,7 +55,7 @@ const Login = () => {
             }
             localStorage.setItem("access", access);
             login(email, password);
-            navigate("/");
+
         }).catch((err) => {
             console.error("Giriş hatası detayı:", err.response?.data);
         });

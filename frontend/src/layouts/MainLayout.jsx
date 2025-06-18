@@ -24,7 +24,6 @@ const MainLayout = () => {
         Lorem ipsum dolor sit amet.
       </div>
 
-
       {/* Navbar */}
       <Navbar />
 

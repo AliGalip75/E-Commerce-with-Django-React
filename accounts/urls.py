@@ -16,6 +16,7 @@ router.register(r'users', CustomUserViewSet, basename='user')
 urlpatterns = [
     # JWT token işlemleri
     path('token/', CustomTokenObtainPairView.as_view(), name='token_obtain'),
+    path('token/logout/', LogoutView.as_view(), name='token_delete'),
     path('token/refresh/', CookieTokenRefreshView.as_view(), name='token_refresh'),
     path('token/verify/', TokenVerifyView.as_view(), name='token_verify'),
     path('token/logout/', LogoutView.as_view(), name='token_logout'),

@@ -56,28 +56,29 @@ const Home = () => {
 
 
   if (loading) return <div>Yükleniyor...</div>;
-  if (!user) return <div>Oturum açmadınız. Lütfen giriş yapın.</div>;
 
   return (
     <>
       <HeroBanner />
       <div className="flex justify-center relative mt-5 mx-5">
         <div className="flex items-center justify-between container">
-          <button
-            onClick={() => handleScroll("left")}
-            className="p-2 group"
-          >
-            <FaArrowLeft className="size-5 transform transition-all duration-300 group-hover:-translate-x-1.5  cursor-pointer"/>
-          </button>
+          <div className="group">
+            <button
+              onClick={() => handleScroll("left")}
+              className="rounded-full border-3 border-zinc-800 p-4 transform transition-all duration-300 group-hover:-translate-x-1.5  cursor-pointer">
+              <FaArrowLeft className="size-5"/>
+            </button>
+          </div>
 
           <CategoryScroller categories={categories} scrollRef={scrollRef} />
 
-          <button
-            onClick={() => handleScroll("right")}
-            className="p-2 group"
-          >
-            <FaArrowRight className="size-5 transform transition-all duration-300 group-hover:translate-x-1.5  cursor-pointer"/>
-          </button>
+          <div className="group">
+            <button
+              onClick={() => handleScroll("right")}
+              className="rounded-full border-3 border-zinc-800 bg-gray-100 dark:bg-zinc-900 p-4 transform transition-all duration-300 group-hover:translate-x-1.5  cursor-pointer">
+              <FaArrowRight className="size-5"/>
+            </button>
+          </div>
         </div>
       </div>
       <br/>

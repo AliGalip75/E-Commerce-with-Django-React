@@ -3,12 +3,6 @@ from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, Permis
 from django.db import models
 import uuid
 
-ACCOUNT_TYPE_CHOICES = [
-    ('customer', 'Müşteri'),
-    ('vendor', 'Satıcı'),
-    ('admin', 'Yönetici'),
-]
-
 # Dosya, MEDIA_ROOT/profile_pics/user_<id>/<new_filename> yoluna kaydedilir
 def user_directory_path(instance, filename):
     ext = filename.split('.')[-1]

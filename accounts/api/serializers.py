@@ -72,6 +72,15 @@ class CustomUserSerializer(serializers.ModelSerializer):
 ''' User güncelleme ve kayit '''
 class CustomUserCreateUpdateSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True, required=True, min_length=6)
+    first_name = serializers.CharField(required=False)
+    last_name = serializers.CharField(required=False)
+    phone = serializers.CharField(required=False)
+    age = serializers.IntegerField(required=False)
+    address = serializers.CharField(required=False)
+    city = serializers.CharField(required=False)
+    country = serializers.CharField(required=False)
+    birth_date = serializers.DateField(required=False)
+    profile_picture = serializers.ImageField(required=False)
 
     class Meta:
         model = CustomUser
@@ -88,6 +97,12 @@ class CustomUserCreateUpdateSerializer(serializers.ModelSerializer):
             'birth_date',
             'profile_picture',
         ]
+        
+    def validate_email(self, value):
+        if CustomUser.objects.filter(email=value).exists():
+            raise serializers.ValidationError("Bu e-posta adresi zaten kayıtlı.")
+        return value
+        
 
     def create(self, validated_data):
         password = validated_data.pop('password')

@@ -9,15 +9,15 @@ import ThemeToggle from "@/components/ui/ThemeToggle";
 const App = () => {
   return (
     <BrowserRouter>
-      <CartProvider>
-        <AuthProvider>
+      <AuthProvider>
+        <CartProvider>
           <ThemeProvider>
             <AppRoutes />
             <ThemeToggle />
           </ThemeProvider>
           <Toaster position="top-center" reverseOrder={false} />
-        </AuthProvider>
-      </CartProvider>
+        </CartProvider>
+      </AuthProvider>
     </BrowserRouter>
   );
 };
