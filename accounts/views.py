@@ -34,7 +34,7 @@ class CustomTokenObtainPairView(TokenObtainPairView):
                 key="refresh_token",
                 value=refresh_token,
                 httponly=True,
-                secure=settings.DEBUG is False, # Production'da True yap!
+                secure=settings.DEBUG is False,
                 samesite='Strict',
                 path='/',
                 max_age=settings.SIMPLE_JWT['REFRESH_TOKEN_LIFETIME'].total_seconds()

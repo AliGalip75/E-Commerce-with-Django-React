@@ -78,6 +78,8 @@ export const useAuth = () => {
     logout,
     fetchUserProfile,
     isAuthenticated: !!user,
-    isLoading: loading
+    isLoading: loading,
+    accessToken,
+    setAccessToken
   };
 };

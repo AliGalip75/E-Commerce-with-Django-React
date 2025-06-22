@@ -15,8 +15,10 @@ const ProductCard = ({ product }) => {
     try {
       if (accessToken) {
         // Giriş yapılmış → API'ye istek
+        console.log("access");
         await axiosInstance.post("cart/", { product_id: productId });
       } else {
+        console.log("access DEĞİL!");
         // Giriş yapılmamış → localStorage kullan
         const localCart = JSON.parse(localStorage.getItem("cart")) || [];
 

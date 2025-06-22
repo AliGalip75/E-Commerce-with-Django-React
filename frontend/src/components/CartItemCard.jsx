@@ -7,6 +7,7 @@ import { LocalStorageManager } from '@/utils/localStorageManager';
 
 const CartItemCard = ({ item }) => {
   const { accessToken } = useAuth();
+  const { updateCartCount } = useCart();
 
   const updateQuantity = async (newQty) => {
     if (accessToken) {
@@ -19,6 +20,7 @@ const CartItemCard = ({ item }) => {
       );
       localStorage.setItem("cart", JSON.stringify(updatedCart));
     }
+    updateCartCount();
     window.dispatchEvent(new Event("cartUpdated"));
   };
 
@@ -33,7 +35,7 @@ const CartItemCard = ({ item }) => {
       );
       localStorage.setItem("cart", JSON.stringify(updatedCart));
     }
-    LocalStorageManager.resetLocalCart();
+    updateCartCount();
     window.dispatchEvent(new Event("cartUpdated"));
   };
 

@@ -6,6 +6,7 @@ from rest_framework import status
 
 class CartItemViewSet(viewsets.ModelViewSet):
     serializer_class = CartItemSerializer
+    permission_classes = [permissions.IsAuthenticated]
     
     # Aktif kullanıcının sepetini getir
     def get_queryset(self):

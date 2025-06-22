@@ -1,8 +1,8 @@
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
-from rest_framework import serializers
-from ..models import CustomUser
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework_simplejwt.exceptions import AuthenticationFailed
+from rest_framework import serializers
+from ..models import CustomUser
 
 ''' Token + RefreshToken + id + email '''
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):

@@ -35,12 +35,15 @@ axiosInstance.interceptors.response.use(
       !isAuthEndpoint(originalRequest.url)
     ) {
       originalRequest._retry = true;
-      
       try {
         const response = await axios.post(
           `${API_BASE_URL}accounts/token/refresh/`,
           {},
-          { withCredentials: true }
+          { withCredentials: true,
+            headers: {
+              Authorization: undefined,
+            }, 
+          }
         );
         
         const newAccessToken = response.data.access;
@@ -62,8 +65,16 @@ axiosInstance.interceptors.response.use(
 
 
 const isAuthEndpoint = (url) => {
-  const authEndpoints = ['accounts/token/', 'accounts/token/refresh/'];
-  return authEndpoints.some(endpoint => url.includes(endpoint));
+  if (!url) return false;
+  const authPaths = ['/accounts/token/', '/accounts/token/refresh/'];
+  
+  try {
+    const cleanedUrl = new URL(url, API_BASE_URL).pathname;
+    return authPaths.some(path => cleanedUrl.includes(path));
+  } catch (e) {
+    return false;
+  }
 };
+
 
 export default axiosInstance;

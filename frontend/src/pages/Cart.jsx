@@ -34,6 +34,7 @@ const Cart = () => {
                     setCartItems(detailedCart);
                 } else {
                     const response = await axiosInstance.get("cart/");
+                    
                     setCartItems(response.data);
                 }
             } catch (error) {
