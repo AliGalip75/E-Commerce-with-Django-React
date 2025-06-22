@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import { Input } from "@/components/ui/input";
 import ProfileMenu from "@/components/ProfileMenu";
-import CartIcon from "./ui/CartIcon";
+import CartIcon from "@/components/CartIcon";
 
 
 const Navbar = () => {
@@ -42,5 +42,4 @@ const Navbar = () => {
     </header>
   );
 };
-
 export default Navbar;

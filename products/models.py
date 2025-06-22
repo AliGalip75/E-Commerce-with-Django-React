@@ -95,6 +95,9 @@ class Product(models.Model):
             models.Index(fields=['price', 'stock']),  
         ]
         db_table = "product"
+
+    def __str__(self):
+        return f'{self.name}'
         
 # Her ürün için birden fazla görsel
 class ProductImage(models.Model):

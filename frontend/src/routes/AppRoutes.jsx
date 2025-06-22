@@ -1,12 +1,12 @@
 import { Routes, Route } from 'react-router-dom';
 import MainLayout from '../layouts/MainLayout';
-
 import Home from '../pages/Home';
 import Cart from '../pages/Cart';
 import Login from '../pages/Login';
 import Register from '../pages/Register';
 import ProductDetail from '../pages/ProductDetail';
 import AccountLayout from '../layouts/AccountLayout';
+import NotFound from '@/pages/NotFound';
 
 const AppRoute = () => {
     return (
@@ -18,11 +18,10 @@ const AppRoute = () => {
             </Route>
             <Route path='/accounts/' element={<AccountLayout />}>
                 <Route path='login' element={<Login />} />
-                <Route path='Register' element={<Register />} />
+                <Route path='register' element={<Register />} />
             </Route>
-            
+            <Route path="*" element={<NotFound />} />
         </Routes>
     );
 };
-
 export default AppRoute;

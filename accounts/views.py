@@ -11,6 +11,7 @@ from rest_framework import status
 from django.conf import settings
 from django.utils import timezone
 from .api.permissions import IsOwner
+from rest_framework_simplejwt.exceptions import TokenError
 
 # Giriş - access dön, refresh'i cookie'ye kaydet
 class CustomTokenObtainPairView(TokenObtainPairView):
@@ -33,10 +34,10 @@ class CustomTokenObtainPairView(TokenObtainPairView):
                 key="refresh_token",
                 value=refresh_token,
                 httponly=True,
-                secure=False,  # Production'da True yap!
+                secure=settings.DEBUG is False, # Production'da True yap!
                 samesite='Strict',
-                path='/api/accounts/',
-                expires=timezone.now() + settings.SIMPLE_JWT['REFRESH_TOKEN_LIFETIME']
+                path='/',
+                max_age=settings.SIMPLE_JWT['REFRESH_TOKEN_LIFETIME'].total_seconds()
             )
             # Refresh token'ı yanıttan kaldır
             response.data.pop('refresh', None)
@@ -45,10 +46,10 @@ class CustomTokenObtainPairView(TokenObtainPairView):
 
 # Çıkış – refresh cookie’sini sil
 class LogoutView(APIView):
-    permission_classes = [permissions.IsAuthenticated]
+    # permission_classes = [permissions.IsAuthenticated]
     def post(self, request):
-        response = Response({"message": "Başaryıla çıkış yaptınız."}, status=status.HTTP_200_OK)
-        response.delete_cookie("refresh_token", path="/api/accounts/")
+        response = Response({"message": "Başaryıla çıkış yaptınız!"}, status=status.HTTP_200_OK)
+        response.delete_cookie("refresh_token", path="/")
         return response
 
 
@@ -62,8 +63,8 @@ class CookieTokenRefreshView(APIView):
             token = RefreshToken(refresh_token)
             access = str(token.access_token)
             return Response({'access': access})
-        except Exception:
-            return Response({'error': 'Geçersiz token'}, status=401)
+        except TokenError as e:
+            return Response({'error': str(e)}, status=401)
         
 # /api/accounts/users/   
 class CustomUserViewSet(viewsets.ModelViewSet):

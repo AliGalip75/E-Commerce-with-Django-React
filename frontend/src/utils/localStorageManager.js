@@ -1,0 +1,27 @@
+export class LocalStorageManager {
+  static getAccessToken() {
+    return localStorage.getItem("access");
+  }
+
+  static setAccessToken(token) {
+    localStorage.setItem("access", token);
+  }
+
+  static removeAccessToken() {
+    localStorage.removeItem("access");
+  }
+
+  static resetLocalCart() {
+    localStorage.removeItem("cart");
+  }
+
+  static isTokenValid(token) {
+    if (!token) return false;
+    try {
+      const payload = JSON.parse(atob(token.split('.')[1]));
+      return payload.exp * 1000 > Date.now();
+    } catch {
+      return false;
+    }
+  }
+}

@@ -1,6 +1,6 @@
 // Home.jsx
 import React, { useContext, useEffect, useRef, useState } from 'react';
-import { AuthContext } from '../context/AuthContext';
+import { AuthContext } from '../contexts/AuthContext';
 import HeroBanner from "../components/HeroBanner";
 import CategoryScroller from "@/components/CategoryScroller";
 import ProductCard from "@/components/ProductCard";

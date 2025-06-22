@@ -3,8 +3,8 @@ import { Button } from "@/components/ui/button";
 import toast from "react-hot-toast";
 import axiosInstance from "@/api/AxiosInstance";
 import { useNavigate } from 'react-router-dom';
-import { AuthContext } from '../context/AuthContext';
-import { useCart } from '../context/CartContext';
+import { AuthContext } from '../contexts/AuthContext';
+import { useCart } from '@/hooks/useCart';
 
 
 const OrderSummaryCard = ({ items }) => {
@@ -24,9 +24,8 @@ const OrderSummaryCard = ({ items }) => {
       if (!accessToken) {
         return navigate("/accounts/login", { state: { from: "/cart" } });
       }
-      await axiosInstance.post("orders/"); // backend sepetten alıyor
+      await axiosInstance.post("orders/"); // backend sepetten alıyor ve siparişi oluşturduktan sonra sepeti siliyor
       toast.success("Sipariş oluşturuldu!");
-      resetCart();
       navigate("/");
     } catch (err) {
       toast.error("Sipariş oluşturulamadı!");
@@ -35,7 +34,7 @@ const OrderSummaryCard = ({ items }) => {
   };
 
   return (
-    <div className="border rounded p-5 shadow-sm bg-gray-50 dark:bg-zinc-900">
+    <div className="border rounded p-5 shadow-sm/10 dark:shadow-md/50  bg-gray-50 dark:bg-zinc-900">
       <h3 className="text-lg font-semibold mb-4">Sipariş Özeti</h3>
       <div className="flex justify-between text-md mb-2">
         <span>Ürün Toplamı</span>

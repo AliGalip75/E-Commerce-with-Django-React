@@ -17,4 +17,4 @@ class CartItem(models.Model):
         verbose_name_plural = 'Sepetler'
     
     def __str__(self):
-        return f"{self.user.username} - {self.product.name} <{self.quantity}> adet"
+        return f"{self.user.username} - {self.product.name} - <{self.quantity}> adet"

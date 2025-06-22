@@ -1,5 +1,5 @@
 import { useContext } from "react";
-import { AuthContext } from "../context/AuthContext";
+import { AuthContext } from "../contexts/AuthContext";
 import { Outlet } from 'react-router-dom';
 import Footer from '../components/Footer';
 

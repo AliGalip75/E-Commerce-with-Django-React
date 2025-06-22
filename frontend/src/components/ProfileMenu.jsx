@@ -7,10 +7,12 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useContext } from "react";
-import { AuthContext } from "@/context/AuthContext";
+import { AuthContext } from "@/contexts/AuthContext";
+import { useAuth } from '@/hooks/useAuth';
 
 const ProfileMenu = () => {
-  const { accessToken, logout } = useContext(AuthContext);
+  const { accessToken} = useContext(AuthContext);
+  const { logout } = useAuth();
 
   return (
     <DropdownMenu>

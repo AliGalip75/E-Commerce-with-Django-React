@@ -5,10 +5,11 @@ export const mergeLocalCartToBackend = async () => {
 
   for (const item of localCart) {
     try {
-      await axiosInstance.post("cart/", {
+      const response = await axiosInstance.post("cart/", {
         product_id: item.product_id,
         quantity: item.quantity,
       });
+      console.log("Merged item:", item.product_id, "→ response:", response.data);
     } catch (err) {
       console.error("Sepet merge hatası:", err);
     }

@@ -2,13 +2,13 @@ import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import axiosInstance from "@/api/AxiosInstance";
 import toast from "react-hot-toast";
-import { useCart } from "@/context/CartContext"; 
-import { AuthContext } from '../context/AuthContext';
+import { useCart } from "@/hooks/useCart"; 
+import { AuthContext } from '../contexts/AuthContext';
 import { useContext, useEffect } from "react";
 
 const ProductCard = ({ product }) => {
 
-  const { incrementCart, cartCount } = useCart(); // CartContext'ten fonksiyonu al
+  const { incCartCount, cartCount } = useCart();
   const { accessToken } = useContext(AuthContext);
 
   const handleAddToCart = async (productId) => {
@@ -33,7 +33,7 @@ const ProductCard = ({ product }) => {
         localStorage.setItem("cart", JSON.stringify(localCart));
       }
 
-      incrementCart(); // context'teki sepet sayacını artır
+      incCartCount(); // context'teki sepet sayacını artır
       toast.success("Ürün başarıyla sepete eklendi");
     } catch (error) {
       console.error("Sepete ekleme hatası", error);
