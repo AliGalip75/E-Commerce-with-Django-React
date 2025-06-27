@@ -6,6 +6,7 @@ import { Toaster } from 'react-hot-toast';
 import { ThemeProvider } from "@/components/theme-provider";
 import ThemeToggle from "@/components/ThemeToggle";
 
+
 const App = () => {
   return (
     <BrowserRouter>

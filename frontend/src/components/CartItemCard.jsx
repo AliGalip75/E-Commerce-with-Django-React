@@ -3,7 +3,7 @@ import axiosInstance from "@/api/AxiosInstance";
 import { useCart } from "@/hooks/useCart";
 import { useAuth } from "@/hooks/useAuth";
 import QuantityDisplay from "@/components/Quantity";
-import { LocalStorageManager } from '@/utils/localStorageManager';
+import toast from "react-hot-toast";
 
 const CartItemCard = ({ item }) => {
   const { accessToken } = useAuth();
@@ -36,6 +36,7 @@ const CartItemCard = ({ item }) => {
       localStorage.setItem("cart", JSON.stringify(updatedCart));
     }
     updateCartCount();
+    toast.success(item.product.name + " " + "Silindi.")
     window.dispatchEvent(new Event("cartUpdated"));
   };
 

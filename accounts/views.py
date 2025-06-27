@@ -9,7 +9,6 @@ from rest_framework.decorators import action
 from rest_framework import permissions
 from rest_framework import status
 from django.conf import settings
-from django.utils import timezone
 from .api.permissions import IsOwner
 from rest_framework_simplejwt.exceptions import TokenError
 
@@ -20,7 +19,11 @@ class CustomTokenObtainPairView(TokenObtainPairView):
     def post(self, request, *args, **kwargs):
         
         serializer = self.get_serializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
+        
+        try:
+            serializer.is_valid(raise_exception=True)
+        except TokenError as e:
+            raise InvalidToken(e.args[0])
         
         # Başarılı yanıt
         response = Response(serializer.validated_data, status=status.HTTP_200_OK)
@@ -34,7 +37,7 @@ class CustomTokenObtainPairView(TokenObtainPairView):
                 key="refresh_token",
                 value=refresh_token,
                 httponly=True,
-                secure=settings.DEBUG is False,
+                secure= not settings.DEBUG,
                 samesite='Strict',
                 path='/',
                 max_age=settings.SIMPLE_JWT['REFRESH_TOKEN_LIFETIME'].total_seconds()
@@ -48,8 +51,17 @@ class CustomTokenObtainPairView(TokenObtainPairView):
 class LogoutView(APIView):
     # permission_classes = [permissions.IsAuthenticated]
     def post(self, request):
+        refreshToken = request.COOKIES.get('refresh_token')
         response = Response({"message": "Başaryıla çıkış yaptınız!"}, status=status.HTTP_200_OK)
         response.delete_cookie("refresh_token", path="/")
+        
+        if refreshToken:
+            try:
+                token = RefreshToken(refreshToken)
+                token.blacklist()
+            except TokenError:
+                pass
+        
         return response
 
 
@@ -88,7 +100,7 @@ class CustomUserViewSet(viewsets.ModelViewSet):
             return [permissions.AllowAny()]
         elif self.action in ['profile', 'update_profile']:
             return [IsOwner()]
-        return super().get_permissions()
+        return [permissions.IsAuthenticated()]
 
     # Aktif kullanıcının bilgilerini getir
     @action(detail=False, methods=["get"])

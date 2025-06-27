@@ -1,5 +1,4 @@
 
-// CategoryScroller.jsx
 const CategoryScroller = ({ categories, scrollRef }) => {
   return (
     <div className="md:w-[80%] w-[60%] py-4">
@@ -9,13 +8,12 @@ const CategoryScroller = ({ categories, scrollRef }) => {
       >
         {categories.map((cat) => (
           <div
-            key={`cat-${cat.id}-${Math.random()}`}
+            key={cat.id}
             className="flex-shrink-0 text-center w-30 font-thin text-xl snap-start"
           >
             <p className="mt-1 cursor-pointer">{cat.name}</p>
           </div>
         ))}
-
       </div>
     </div>
   );

@@ -65,6 +65,7 @@ class Product(models.Model):
         null=True,
         verbose_name='Ürün Kapak Resmi'
     )
+    sold_count = models.IntegerField(default=0)
     created_at = models.DateTimeField(auto_now_add=True)
     
     # Ürün görseli kaydedilmeden önce ölçeklendirme

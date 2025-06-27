@@ -39,7 +39,6 @@ export const useRegisterForm = () => {
     const validation = validators.validateRegisterForm(formData);
     if (!validation.isValid) {
       setErrors(validation.errors);
-      toast.error("Lütfen form hatalarını düzeltin");
       return;
     }
 

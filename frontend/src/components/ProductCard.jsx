@@ -4,52 +4,64 @@ import axiosInstance from "@/api/AxiosInstance";
 import toast from "react-hot-toast";
 import { useCart } from "@/hooks/useCart"; 
 import { AuthContext } from '../contexts/AuthContext';
-import { useContext, useEffect } from "react";
+import { useContext } from "react";
+import { motion } from "framer-motion"; 
+import { useNavigate } from "react-router-dom";
+import { SessionStorageManager } from "@/utils/sessionStorageManager";
+
+
+const MotionCard = motion.create(Card);
 
 const ProductCard = ({ product }) => {
-
-  const { incCartCount, cartCount } = useCart();
+  const { incCartCount } = useCart();
   const { accessToken } = useContext(AuthContext);
+  const navigate = useNavigate();
 
   const handleAddToCart = async (productId) => {
     try {
       if (accessToken) {
-        // Giriş yapılmış → API'ye istek
-        console.log("access");
         await axiosInstance.post("cart/", { product_id: productId });
       } else {
-        console.log("access DEĞİL!");
-        // Giriş yapılmamış → localStorage kullan
         const localCart = JSON.parse(localStorage.getItem("cart")) || [];
-
         const existingItemIndex = localCart.findIndex(item => item.product_id === productId);
 
         if (existingItemIndex !== -1) {
-          // Zaten varsa quantity artır
           localCart[existingItemIndex].quantity += 1;
         } else {
-          // Yoksa yeni ekle
           localCart.push({ product_id: productId, quantity: 1 });
         }
 
         localStorage.setItem("cart", JSON.stringify(localCart));
       }
 
-      incCartCount(); // context'teki sepet sayacını artır
-      toast.success("Ürün başarıyla sepete eklendi");
+      incCartCount();
+      toast.success("Sepete eklendi");
     } catch (error) {
       console.error("Sepete ekleme hatası", error);
       toast.error("Ürün sepete eklenemedi");
     }
   };
 
+  {/* Ürünün detay sayfasına yönlendir */}
+  const handleCardClick = () => {
+    SessionStorageManager.setScrollPosition(window.scrollY);
+    navigate(`/products/${product.id}`);
+  };
+
   return (
-    <Card className="w-full max-w-sm rounded-2xl shadow-md bg-white transform transition-all duration-400 hover:-translate-y-1 hover:shadow-lg dark:bg-zinc-900">
+    <MotionCard 
+      onClick={handleCardClick}
+      initial={{ opacity: 0, y: 40 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.7 }}
+      whileHover={{ scale: 1.01 }}
+      className="w-full max-w-sm rounded-2xl shadow-md bg-white hover:shadow-lg dark:bg-zinc-900 max-h-[500px] cursor-pointer"
+    >
       {/* Ürün resmi */}
       <img
         src={product.image}
         alt={product.name}
-        className="w-full h-48 object-cover"
+        className="w-full h-50 object-cover"
       />
 
       <CardContent className="p-4 space-y-1">
@@ -63,8 +75,10 @@ const ProductCard = ({ product }) => {
 
         {/* Açıklama */}
         {product.description && (
-          <p className="text-sm text-gray-600 dark:text-gray-400 line-clamp-2">
-            {product.description}
+          <p className="text-sm text-gray-600 dark:text-gray-400">
+            {product.description.length > 40
+              ? product.description.substring(0, 40) + "..."
+              : product.description}
           </p>
         )}
 
@@ -73,9 +87,19 @@ const ProductCard = ({ product }) => {
       </CardContent>
 
       <CardFooter className="p-4">
-        <Button onClick={() => handleAddToCart(product.id)} className="w-full cursor-pointer">Sepete Ekle</Button>
+        <motion.div whileTap={{ scale: 0.95 }}>
+          <Button 
+            onClick={(e) => {
+              e.stopPropagation();
+              handleAddToCart(product.id);
+            }}  
+            className="w-full cursor-pointer"
+          >
+            Sepete Ekle
+          </Button>
+        </motion.div>
       </CardFooter>
-    </Card>
+    </MotionCard>
   );
 };
 

@@ -53,7 +53,7 @@ class CategoryAdmin(admin.ModelAdmin):
     
     
 class ProductAdmin(admin.ModelAdmin):
-    list_display = ['name', 'price', 'stock', 'category', 'created_at']
+    list_display = ['name', 'price', 'stock', 'category', 'sold_count', 'created_at']
     list_filter = ['category', 'created_at']
     search_fields = ['name', 'description']
     ordering = ['-created_at']

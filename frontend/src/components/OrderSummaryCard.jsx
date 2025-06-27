@@ -34,7 +34,7 @@ const OrderSummaryCard = ({ items }) => {
   };
 
   return (
-    <div className="border rounded p-5 shadow-sm/10 dark:shadow-md/50  bg-gray-50 dark:bg-zinc-900">
+    <div className="border rounded p-5 shadow-sm/10 dark:shadow-md/50 bg-white dark:bg-zinc-900">
       <h3 className="text-lg font-semibold mb-4">Sipariş Özeti</h3>
       <div className="flex justify-between text-md mb-2">
         <span>Ürün Toplamı</span>

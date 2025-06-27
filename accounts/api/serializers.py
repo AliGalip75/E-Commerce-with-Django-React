@@ -81,12 +81,14 @@ class CustomUserCreateUpdateSerializer(serializers.ModelSerializer):
     country = serializers.CharField(required=False)
     birth_date = serializers.DateField(required=False)
     profile_picture = serializers.ImageField(required=False)
+    full_name = serializers.SerializerMethodField()
 
     class Meta:
         model = CustomUser
         fields = [
             'first_name',
             'last_name',
+            'full_name',
             'email',
             'password',
             'phone',
@@ -102,7 +104,9 @@ class CustomUserCreateUpdateSerializer(serializers.ModelSerializer):
         if CustomUser.objects.filter(email=value).exists():
             raise serializers.ValidationError("Bu e-posta adresi zaten kayıtlı.")
         return value
-        
+    
+    def get_full_name(self, obj):
+        return obj.get_full_name()
 
     def create(self, validated_data):
         password = validated_data.pop('password')

@@ -11,8 +11,8 @@ export class LocalStorageManager {
     localStorage.removeItem("access");
   }
 
-  static resetLocalCart() {
-    localStorage.removeItem("cart");
+  static getLocalCart() {
+    localStorage.getItem("cart");
   }
 
   static isTokenValid(token) {

@@ -9,7 +9,7 @@ const RegisterForm = ({
   onSubmit 
 }) => {
   return (
-    <div className="min-w-md min-h-10/15 p-6 border-2 border-gray-200 rounded-lg shadow-md bg-white dark:bg-zinc-900 dark:text-white">
+    <div className="min-w-xl min-h-10/15 p-6 border-2 border-gray-200 rounded-lg shadow-md bg-white dark:bg-zinc-900 dark:text-white">
       <h2 className="text-2xl font-semibold text-center mb-6 dark:text-gray-200">
         Kayıt Ol
       </h2>
@@ -112,7 +112,7 @@ const SubmitButton = ({ isSubmitting }) => (
   <button
     type="submit"
     disabled={isSubmitting}
-    className="w-full bg-zinc-800 outline-1 text-white py-2 rounded hover:bg-zinc-950 disabled:opacity-50 disabled:cursor-not-allowed flex flex-row justify-center items-center group h-[45px]"
+    className="w-full bg-zinc-800 outline-1 text-white py-2 rounded hover:bg-zinc-900 disabled:opacity-50 disabled:cursor-not-allowed flex flex-row justify-center items-center group h-[45px]"
   >
     <div className="flex h-full">
       <h1 className="me-1 flex items-center h-full">
