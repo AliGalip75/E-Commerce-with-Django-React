@@ -1,11 +1,10 @@
-import React, { useContext } from "react";
+import React from "react";
 import { Button } from "@/components/ui/button";
 import toast from "react-hot-toast";
-import axiosInstance from "@/api/AxiosInstance";
-import { useNavigate } from 'react-router-dom';
-import { AuthContext } from '../contexts/AuthContext';
-import { useCart } from '@/hooks/useCart';
-
+import { useNavigate } from "react-router-dom";
+import { useCart } from "@/hooks/useCart";
+import { useAuth } from "@/hooks/useAuth";
+import useAxios from "@/hooks/useAxios";
 
 const OrderSummaryCard = ({ items }) => {
   const total = items.reduce(
@@ -13,41 +12,49 @@ const OrderSummaryCard = ({ items }) => {
     0
   );
 
-  const navigate = useNavigate();
-  const { resetCart } = useCart();
-  const { accessToken } = useContext(AuthContext);
   const KDV = total * 0.10;
   const finalTotal = total + KDV;
+
+  const navigate = useNavigate();
+  const { accessToken } = useAuth();
+  const axios = useAxios();
 
   const handleCheckout = async () => {
     try {
       if (!accessToken) {
         return navigate("/accounts/login", { state: { from: "/cart" } });
       }
-      await axiosInstance.post("orders/"); // backend sepetten alıyor ve siparişi oluşturduktan sonra sepeti siliyor
+      if (items.length === 0) {
+        throw "sepette ürün yok";
+      }
+      await axios.post("orders/"); 
       toast.success("Sipariş oluşturuldu!");
       navigate("/");
     } catch (err) {
-      toast.error("Sipariş oluşturulamadı!");
-      console.log(err.response.data)
+      toast.error(err);
+      console.error(err?.response?.data || err.message);
     }
   };
 
   return (
     <div className="border rounded p-5 shadow-sm/10 dark:shadow-md/50 bg-white dark:bg-zinc-900">
       <h3 className="text-lg font-semibold mb-4">Sipariş Özeti</h3>
+
       <div className="flex justify-between text-md mb-2">
         <span>Ürün Toplamı</span>
         <span>{total.toFixed(0)} ₺</span>
       </div>
+
       <div className="flex justify-between text-md mb-2">
         <span>KDV ( %10 )</span>
         <span>{KDV.toFixed(0)} ₺</span>
       </div>
+
       <div className="flex justify-between text-md mt-8">
         <span className="font-bold">Genel Toplam</span>
         <span>{finalTotal.toFixed(0)} ₺</span>
       </div>
+
       <div className="flex justify-end mt-5">
         <Button onClick={handleCheckout} className="cursor-pointer">
           <span>Sipariş ver</span>
@@ -55,6 +62,6 @@ const OrderSummaryCard = ({ items }) => {
       </div>
     </div>
   );
+};
 
-}
 export default OrderSummaryCard;

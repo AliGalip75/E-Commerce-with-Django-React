@@ -1,4 +1,4 @@
-from rest_framework import viewsets
+from rest_framework import viewsets, permissions
 from products.models import Product, Category
 from products.api.serializers import ProductReadSerializer, ProductWriteSerializer, CategorySerializer
 from rest_framework.decorators import action
@@ -11,6 +11,12 @@ class ProductViewSet(viewsets.ModelViewSet):
         if self.action in ['list', 'retrieve', 'populer']:
             return ProductReadSerializer
         return ProductWriteSerializer
+    
+    def get_permissions(self):
+        if self.action in ['list', 'retrieve', 'populer']:
+            return [permissions.AllowAny()]
+        else:
+            return [permissions.IsAdminUser()]
     
     @action(detail=False, methods=['get'])
     def populer(self, request):

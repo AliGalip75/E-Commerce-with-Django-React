@@ -1,10 +1,9 @@
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import axiosInstance from "@/api/AxiosInstance";
 import toast from "react-hot-toast";
 import { useCart } from "@/hooks/useCart"; 
-import { AuthContext } from '../contexts/AuthContext';
-import { useContext } from "react";
+import { useAuth } from "@/hooks/useAuth";
+import useAxios from "@/hooks/useAxios";
 import { motion } from "framer-motion"; 
 import { useNavigate } from "react-router-dom";
 import { SessionStorageManager } from "@/utils/sessionStorageManager";
@@ -13,14 +12,15 @@ import { SessionStorageManager } from "@/utils/sessionStorageManager";
 const MotionCard = motion.create(Card);
 
 const ProductCard = ({ product }) => {
+  const axios = useAxios();
   const { incCartCount } = useCart();
-  const { accessToken } = useContext(AuthContext);
+  const { accessToken } = useAuth();
   const navigate = useNavigate();
 
   const handleAddToCart = async (productId) => {
     try {
       if (accessToken) {
-        await axiosInstance.post("cart/", { product_id: productId });
+        await axios.post("cart/", { product_id: productId });
       } else {
         const localCart = JSON.parse(localStorage.getItem("cart")) || [];
         const existingItemIndex = localCart.findIndex(item => item.product_id === productId);
@@ -45,16 +45,17 @@ const ProductCard = ({ product }) => {
   {/* Ürünün detay sayfasına yönlendir */}
   const handleCardClick = () => {
     SessionStorageManager.setScrollPosition(window.scrollY);
-    navigate(`/products/${product.id}`);
+    navigate(`/products/${product.id}/`);
   };
 
   return (
     <MotionCard 
       onClick={handleCardClick}
-      initial={{ opacity: 0, y: 40 }}
+      initial={{ opacity: 0, y: 20 }}
       whileInView={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.7 }}
+      transition={{ duration: 0.4 }}
       whileHover={{ scale: 1.01 }}
+      viewport={{ once: true }}
       className="w-full max-w-sm rounded-2xl shadow-md bg-white hover:shadow-lg dark:bg-zinc-900 max-h-[500px] cursor-pointer"
     >
       {/* Ürün resmi */}

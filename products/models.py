@@ -48,7 +48,6 @@ def product_gallery_path(instance, filename):
 class Product(models.Model):
     name = models.CharField(max_length=255)
     description = models.TextField(blank=True, null=True)
-    uuid = models.UUIDField(default=uuid.uuid4, editable=False, null=False, unique=True)
     price = models.DecimalField(
         max_digits=10,
         decimal_places=2,
@@ -60,6 +59,11 @@ class Product(models.Model):
         related_name='products'
     )
     stock = models.PositiveIntegerField()
+    
+    @property
+    def in_stock(self):
+        return self.stock > 0
+    
     image = models.ImageField(
         upload_to=product_thumbnail_path,
         null=True,

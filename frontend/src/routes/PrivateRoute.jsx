@@ -1,8 +1,8 @@
 import { Navigate } from "react-router-dom";
-import { LocalStorageManager } from "@/utils/localStorageManager";
+import { useAuth } from "@/hooks/useAuth";
 
 const PrivateRoute = ({ children }) => {
-  const accessToken = LocalStorageManager.getAccessToken();
+  const { accessToken } = useAuth();
 
   return accessToken ? children : <Navigate to="/accounts/login" />;
 };

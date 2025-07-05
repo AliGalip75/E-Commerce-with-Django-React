@@ -1,7 +1,8 @@
 import { useState, useEffect } from "react";
-import axiosInstance from "@/api/AxiosInstance"; // ya da fetch kullanıyorsan ona göre
+import useAxios from "@/hooks/useAxios";
 
 export const useOrders = (enabled = true) => {
+  const axios = useAxios();
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -10,7 +11,7 @@ export const useOrders = (enabled = true) => {
 
     const fetchOrders = async () => {
       try {
-        const response = await axiosInstance.get("/orders/");
+        const response = await axios.get("/orders/");
         setOrders(response.data);
       } catch (error) {
         console.error("Siparişler alınamadı:", error);

@@ -31,7 +31,9 @@ class CategoryAdmin(admin.ModelAdmin):
     search_fields = ['name']
     prepopulated_fields = {'slug': ('name',)}
     list_filter = ['is_active', 'parent']
-    inlines = [ProductInline]  # Kategoriye bağlı ürünleri göster
+    inlines = [
+        ProductInline
+    ]  # Kategoriye bağlı ürünleri göster
     
     # Bir kategori kendi alt kategorisini parent olarak seçemesin
     def formfield_for_foreignkey(self, db_field, request, **kwargs):
@@ -57,7 +59,9 @@ class ProductAdmin(admin.ModelAdmin):
     list_filter = ['category', 'created_at']
     search_fields = ['name', 'description']
     ordering = ['-created_at']
-    inlines = [ProductImageInline]
+    inlines = [
+        ProductImageInline
+    ]
     
 
 admin.site.register(Category, CategoryAdmin)

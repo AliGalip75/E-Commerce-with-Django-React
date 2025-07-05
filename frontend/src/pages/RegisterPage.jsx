@@ -1,9 +1,17 @@
-import Logo from '../components/Logo';
-import LoginForm from '../components/forms/LoginForm';
-import { useLoginForm } from '../hooks/useLoginForm';
+{/**
+  
+  import Logo from '../components/Logo';
+import RegisterForm from '../components/forms/RegisterForm';
+import { useRegisterForm } from '../hooks/useRegisterForm';
 
-const Login = () => {
-  const { formData, isSubmitting, handleInputChange, handleSubmit } = useLoginForm();
+const Register = () => {
+  const { 
+    formData, 
+    errors, 
+    isSubmitting, 
+    handleInputChange, 
+    handleSubmit 
+  } = useRegisterForm();
 
   return (
     <div className="flex flex-col h-full dark:text-gray-300">
@@ -12,8 +20,9 @@ const Login = () => {
       </div>
       
       <div className="h-[70%] flex justify-center items-center mb-5">
-        <LoginForm
+        <RegisterForm
           formData={formData}
+          errors={errors}
           isSubmitting={isSubmitting}
           onInputChange={handleInputChange}
           onSubmit={handleSubmit}
@@ -23,4 +32,6 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default Register;
+  
+  */}

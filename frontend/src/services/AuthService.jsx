@@ -1,30 +1,27 @@
-import axiosInstance from '@/api/AxiosInstance';
+export const AuthService = {
+  async register(axios, userData) {
+    const res = await axios.post("accounts/users/", userData);
+    return res.data;
+  },
 
-class AuthService {
-  async login(email, password) {
-    const response = await axiosInstance.post("accounts/token/", { email, password });
-    return response.data;
+  async refreshToken(axios) {
+    const res = await axios.post("accounts/token/refresh/", {}, { withCredentials: true });
+    return res.data;
+  },
+
+  async getProfile(axios) {
+    const res = await axios.get("accounts/users/profile/");
+    return res.data;
+  },
+
+  async logout(axios) {
+    const res = await axios.post("accounts/token/logout/", {}, { withCredentials: true });
+    return res.data;
+  },
+
+  async login(axios, email, password) {
+    const res = await axios.post("/accounts/token/", { email, password }, { withCredentials: true });
+    return res.data; // sadece access döner
   }
 
-  async logout() {
-    const response = await axiosInstance.post("accounts/token/logout/");
-    return response.data;
-  }
-
-  async register(userData) {
-    const response = await axiosInstance.post("accounts/users/", userData);
-    return response.data;
-  }
-
-  async getProfile() {
-    const response = await axiosInstance.get("accounts/users/profile/");
-    return response.data;
-  }
-
-  async refreshToken() {
-    const response = await axiosInstance.post("accounts/token/refresh/", {}, { withCredentials: true });
-    return response.data;
-  }
-}
-
-export const authService = new AuthService();
+};

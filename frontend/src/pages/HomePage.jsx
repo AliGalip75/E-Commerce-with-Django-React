@@ -1,18 +1,16 @@
 // Home.jsx
-import React, { useContext, useEffect, useLayoutEffect, useRef, useState } from 'react';
-import { AuthContext } from '../contexts/AuthContext';
+import React, { useEffect, useLayoutEffect, useRef, useState } from 'react';
+import useAxios from "@/hooks/useAxios";
 import HeroBanner from "../components/HeroBanner";
 import CategoryScroller from "@/components/CategoryScroller";
 import ProductCard from "@/components/ProductCard";
 import { FaArrowLeft, FaArrowRight, FaArrowDown } from "react-icons/fa";
-import axiosInstance from '@/api/AxiosInstance';
 import { SessionStorageManager } from '@/utils/sessionStorageManager';
 import { motion } from "framer-motion"; 
 
-
-const Home = () => {
-  const { loading: authLoading } = useContext(AuthContext);
+const HomePage = () => {
   const [categories, setCategories] = useState([]);
+  const axios = useAxios();
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const scrollRef = useRef(null);
@@ -22,8 +20,8 @@ const Home = () => {
     const fetchData = async () => {
       try {
         const [categoryRes, productRes] = await Promise.all([
-          axiosInstance.get("categories/"),
-          axiosInstance.get("products/populer/")
+          axios.get("categories/"),
+          axios.get("products/populer/")
         ]);
         setCategories(categoryRes.data);
         setProducts(productRes.data);
@@ -86,7 +84,7 @@ const Home = () => {
 
   return (
     <>
-      {authLoading || loading ? (
+      {loading ? (
         <div className="flex justify-center items-center py-10">
             <motion.div
                 className="w-12 h-12 border-4 border-gray-300 border-t-blue-500 rounded-full"
@@ -137,7 +135,7 @@ const Home = () => {
 
           <div id="targetDiv" className="flex flex-col">
             <h2 className="flex justify-center text-3xl pt-20">Popüler Ürünler</h2>
-            <div className="flex justify-center flex-wrap pt-10">
+            <div className="flex justify-center flex-wrap pt-10 mb-10">
               <div className="container flex justify-center flex-wrap gap-10">
                 {products.map((product) => (
                   <ProductCard key={product.id} product={product} />
@@ -152,4 +150,4 @@ const Home = () => {
 
 };
 
-export default Home;
+export default HomePage;

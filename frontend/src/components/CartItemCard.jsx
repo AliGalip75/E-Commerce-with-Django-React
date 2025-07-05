@@ -1,43 +1,51 @@
 import { Button } from "@/components/ui/button";
-import axiosInstance from "@/api/AxiosInstance";
+import useAxios from "@/hooks/useAxios";
 import { useCart } from "@/hooks/useCart";
 import { useAuth } from "@/hooks/useAuth";
 import QuantityDisplay from "@/components/Quantity";
 import toast from "react-hot-toast";
 
 const CartItemCard = ({ item }) => {
+  const axios = useAxios();
   const { accessToken } = useAuth();
   const { updateCartCount } = useCart();
 
   const updateQuantity = async (newQty) => {
-    if (accessToken) {
-      await axiosInstance.patch(`cart/${item.id}/`, { quantity: newQty });
-    } else {
-      // localStorage update
-      const localCart = JSON.parse(localStorage.getItem("cart")) || [];
-      const updatedCart = localCart.map((i) =>
-        i.product_id === item.product.id ? { ...i, quantity: newQty } : i
-      );
-      localStorage.setItem("cart", JSON.stringify(updatedCart));
+    try {
+      if (accessToken) {
+        await axios.patch(`cart/${item.id}/`, { quantity: newQty });
+      } else {
+        const localCart = JSON.parse(localStorage.getItem("cart")) || [];
+        const updatedCart = localCart.map((i) =>
+          i.product_id === item.product.id ? { ...i, quantity: newQty } : i
+        );
+        localStorage.setItem("cart", JSON.stringify(updatedCart));
+      }
+      updateCartCount();
+      window.dispatchEvent(new Event("cartUpdated"));
+    } catch (error) {
+      toast.error("Miktar güncellenemedi.");
     }
-    updateCartCount();
-    window.dispatchEvent(new Event("cartUpdated"));
   };
 
   // Access'e göre sepetten veya localden item sil
   const deleteItem = async () => {
-    if (accessToken) {
-      await axiosInstance.delete(`cart/${item.id}/`);
-    } else {
-      const localCart = JSON.parse(localStorage.getItem("cart")) || [];
-      const updatedCart = localCart.filter(
-        (i) => i.product_id !== item.product.id
-      );
-      localStorage.setItem("cart", JSON.stringify(updatedCart));
+    try {
+      if (accessToken) {
+        await axios.delete(`cart/${item.id}/`);
+      } else {
+        const localCart = JSON.parse(localStorage.getItem("cart")) || [];
+        const updatedCart = localCart.filter(
+          (i) => i.product_id !== item.product.id
+        );
+        localStorage.setItem("cart", JSON.stringify(updatedCart));
+      }
+      updateCartCount();
+      toast.success(`${item.product.name} silindi.`);
+      window.dispatchEvent(new Event("cartUpdated"));
+    } catch (error) {
+      toast.error("Ürün silinemedi.");
     }
-    updateCartCount();
-    toast.success(item.product.name + " " + "Silindi.")
-    window.dispatchEvent(new Event("cartUpdated"));
   };
 
   return (

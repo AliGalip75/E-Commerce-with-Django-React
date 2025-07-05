@@ -38,7 +38,7 @@ class CustomTokenObtainPairView(TokenObtainPairView):
                 value=refresh_token,
                 httponly=True,
                 secure= not settings.DEBUG,
-                samesite='Strict',
+                samesite='Lax',
                 path='/',
                 max_age=settings.SIMPLE_JWT['REFRESH_TOKEN_LIFETIME'].total_seconds()
             )
@@ -65,7 +65,7 @@ class LogoutView(APIView):
         return response
 
 
-# Access'i yenile
+# Tarayıcı cookie'sindeki refresh ile access'i yenile
 class CookieTokenRefreshView(APIView):
     def post(self, request):
         refresh_token = request.COOKIES.get('refresh_token')
@@ -99,7 +99,7 @@ class CustomUserViewSet(viewsets.ModelViewSet):
         elif self.action == 'create':
             return [permissions.AllowAny()]
         elif self.action in ['profile', 'update_profile']:
-            return [IsOwner()]
+            return [permissions.IsAuthenticated()]
         return [permissions.IsAuthenticated()]
 
     # Aktif kullanıcının bilgilerini getir

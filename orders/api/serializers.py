@@ -7,16 +7,16 @@ class OrderItemSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = OrderItem
-        fields = ['product', 'product_name', 'product_image', 'quantity', 'price']
+        fields = ['product', 'product_name', 'product_image', 'quantity', 'item_subtotal', 'price']
         
     
 class OrderSerializer(serializers.ModelSerializer):
-    items = OrderItemSerializer(many=True, read_only=True)
+    items = OrderItemSerializer(many=True, read_only=True) # Items modeldeki related_name'den geliyor!
     user_full_name = serializers.SerializerMethodField()
     
     class Meta:
         model = Order
-        fields = ['id', 'user', 'user_full_name', 'created_at', 'total_price', 'status', 'items']
+        fields = ['order_id', 'user', 'user_full_name', 'created_at', 'total_price', 'status', 'items']
         read_only_fields = ['user', 'created_at', 'total_price']
         
     def get_user_full_name(self, obj):

@@ -28,11 +28,11 @@ const ProfileInfo = ({ profile, activeSection }) => {
     }
 
     return (
-      <div className="space-y-6">
+      <div className="space-y-6 mb-5">
         {orders.map((order) => (
-          <Card key={order.id} className="dark:bg-zinc-900 dark:shadow-2xl">
+          <Card key={order.order_id} className="dark:bg-zinc-900 dark:shadow-2xl">
             <CardHeader>
-              <CardTitle className="text-lg">Sipariş #{order.id}</CardTitle>
+              <CardTitle className="text-lg">Sipariş #{order.order_id.slice(0, 5)}</CardTitle>
               <div className="text-sm text-muted-foreground flex justify-between">
                 <p>Tarih: {new Date(order.created_at).toLocaleString()}</p>
                 <p>Alıcı: {order.user_full_name}</p>
@@ -42,7 +42,7 @@ const ProfileInfo = ({ profile, activeSection }) => {
             <Separator />
             <CardContent className="space-y-4">
               {order.items.map((item) => (
-                <div key={`${order.id}-${item.product}`} className="flex justify-between items-center border p-2 rounded-md">
+                <div key={`${order.order_id}-${item.product}`} className="flex justify-between items-center border p-2 rounded-md">
                   <div className="space-y-1">
                     <p className="font-medium">{item.product_name}</p>
                     <p className="text-sm text-muted-foreground">Adet: {item.quantity}</p>

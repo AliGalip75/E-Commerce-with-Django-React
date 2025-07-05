@@ -1,20 +1,19 @@
-import axiosInstance from "@/api/AxiosInstance";
-
-export const mergeLocalCartToBackend = async () => {
+export const mergeLocalCartToBackend = async (axios) => {
   const localCart = JSON.parse(localStorage.getItem("cart")) || [];
 
   for (const item of localCart) {
     try {
-      await axiosInstance.post("cart/", {
+      await axios.post("cart/", {
         product_id: item.product_id,
         quantity: item.quantity,
       });
+      console.log("merge başarılı");
     } catch (err) {
       console.error("Sepet merge hatası:", err);
     }
   }
 
   localStorage.removeItem("cart");
-  // Sepet değiştiğini bildir
   window.dispatchEvent(new Event("cartUpdated"));
 };
+

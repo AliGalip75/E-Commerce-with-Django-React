@@ -1,14 +1,18 @@
 import { Outlet } from 'react-router-dom';
 import Navbar from '../components/Navbar';
-import Footer from '../components/Footer';
+import SiteFooter from './sections/SiteFooter';
+import SiteHeader from './sections/SiteHeader';
+import Footer from '@/components/Footer';
 
 const MainLayout = () => {
 
   return (
     <div className="flex flex-col min-h-screen bg-gray-100 dark:bg-zinc-900 text-gray-900 dark:text-white">
 
-      {/* Navbar */}
-      <Navbar />
+      {/* Header */}
+      <SiteHeader>
+        <Navbar />
+      </SiteHeader>
 
       {/* Main Content */}
       <main className="grow">
@@ -16,7 +20,9 @@ const MainLayout = () => {
       </main>
 
       {/* Footer */}
-      <Footer />
+      <SiteFooter>
+        <Footer />
+      </SiteFooter>
     </div>
   );
 };

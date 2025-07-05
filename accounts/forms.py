@@ -37,8 +37,12 @@ class UserCreationForm(forms.ModelForm):
     
 class UserChangeForm(forms.ModelForm):
     ''' Update User (Admin Panel) '''       
-    password = ReadOnlyPasswordHashField() # Admin panelde şifreyi hash'li göster
-    
+    password = ReadOnlyPasswordHashField(label="Parola", help_text="Parolayı değiştirmek için <a href=\"../password/\">bu formu</a> kullanın.")
+
     class Meta:
         model = CustomUser
-        fields = ['email', 'profile_picture']
+        fields = '__all__'  # veya ['email', 'first_name', 'last_name', ...] gibi
+
+    def clean_password(self):
+        # Admin panelde kullanıcıyı kaydederken mevcut şifreyi koru
+        return self.initial.get("password")

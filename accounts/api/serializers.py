@@ -4,6 +4,7 @@ from rest_framework_simplejwt.exceptions import AuthenticationFailed
 from rest_framework import serializers
 from ..models import CustomUser
 
+
 ''' Token + RefreshToken + id + email '''
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
     username_field = 'email'
@@ -105,8 +106,15 @@ class CustomUserCreateUpdateSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError("Bu e-posta adresi zaten kayıtlı.")
         return value
     
+    def validate_password(self, value):
+        if len(value) < 6:
+            raise serializers.ValidationError("Şifre en az 6 karakter olmalı.")
+    
     def get_full_name(self, obj):
-        return obj.get_full_name()
+        if hasattr(obj, 'get_full_name'):
+            return obj.get_full_name()
+        return "Anonim Kullanıcı"
+
 
     def create(self, validated_data):
         password = validated_data.pop('password')

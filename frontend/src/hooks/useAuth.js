@@ -1,27 +1,28 @@
 import { useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../contexts/AuthContext';
-import { authService } from '../services/authService';
+import { AuthService } from '../services/authService';
 import { mergeLocalCartToBackend } from '@/utils/mergeLocalCartToBackend';
 import toast from 'react-hot-toast';
-import { LocalStorageManager } from '@/utils/localStorageManager';
 import { useCart } from '@/hooks/useCart';
+import useAxios from "@/hooks/useAxios";
 
 export const useAuth = () => {
+  const axios = useAxios();
   const navigate = useNavigate();
   const { user, setUser, accessToken, setAccessToken, setLoading, loading} = useContext(AuthContext);
-  const { cartCount, updateCartCount } = useCart();
+  const { updateCartCount } = useCart();
 
 
   const login = async (email, password, redirectCallback) => {
     try {
       setLoading(true);
-      const data = await authService.login(email, password);
-      LocalStorageManager.setAccessToken(data.access);
+
+      const data = await AuthService.login(axios, email, password);
       setAccessToken(data.access);
       
-      // Merge cart after successful login
-      await mergeLocalCartToBackend();
+      // Sepet birleştirme
+      await mergeLocalCartToBackend(axios);
       window.dispatchEvent(new Event("cartUpdated"));
       updateCartCount();
       
@@ -39,7 +40,7 @@ export const useAuth = () => {
   const logout = async () => {
     try {
       await toast.promise(
-        authService.logout(),
+        AuthService.logout(axios),
         {
           loading: "Çıkış yapılıyor...",
           success: (response) => response.message || "Çıkış başarılı",
@@ -47,21 +48,20 @@ export const useAuth = () => {
         },
       );
       
-      LocalStorageManager.removeAccessToken();
+      // Frontend belleğini temizle
       setAccessToken(null);
       setUser(null);
 
       navigate("/accounts/login/");
-
     } catch (error) {
-      console.error("Logout error:", error);
+      console.error("Hata:", error);
     }
   };
 
   const fetchUserProfile = async () => {
     try {
       setLoading(true);
-      const userData = await authService.getProfile();
+      const userData = await AuthService.getProfile(axios);
       setUser(userData);
       return userData;
     } catch (error) {
@@ -78,7 +78,7 @@ export const useAuth = () => {
     logout,
     fetchUserProfile,
     isAuthenticated: !!user,
-    isLoading: loading,
+    loading,
     accessToken,
     setAccessToken
   };

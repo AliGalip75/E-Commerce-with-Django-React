@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import axiosInstance from '@/api/AxiosInstance';
+import React, { useContext, useEffect, useState } from 'react';
+import useAxios from "@/hooks/useAxios";
 import CartItemCard from "@/components/CartItemCard";
 import OrderSummaryCard from "@/components/OrderSummaryCard";
 import { motion } from "framer-motion"; 
@@ -8,12 +8,14 @@ import {
   AlertTitle,
   AlertDescription
 } from "@/components/ui/alert";
-import { LocalStorageManager } from '@/utils/localStorageManager';
+import { AuthContext } from '@/contexts/AuthContext';
+
 
 const Cart = () => {
+    const axios = useAxios();
     const [cartItems, setCartItems] = useState([]);
     const [loading, setLoading] = useState(true);
-    const accessToken = LocalStorageManager.getAccessToken();
+    const { accessToken } = useContext(AuthContext);
     
     useEffect(() => {
         const fetchCart = async () => {
@@ -22,7 +24,7 @@ const Cart = () => {
                     const localCart = JSON.parse(localStorage.getItem("cart")) || [];
                     const detailedCart = await Promise.all(
                         localCart.map(async (item) => {
-                            const response = await axiosInstance.get(`/products/${item.product_id}/`);
+                            const response = await axios.get(`/products/${item.product_id}/`);
                             return {
                                 product: response.data,
                                 quantity: item.quantity
@@ -31,7 +33,7 @@ const Cart = () => {
                     );
                     setCartItems(detailedCart);
                 } else {
-                    const response = await axiosInstance.get("cart/");
+                    const response = await axios.get("cart/");
                     setCartItems(response.data);
                 }
             } catch (error) {

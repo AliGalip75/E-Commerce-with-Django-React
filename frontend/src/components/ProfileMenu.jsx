@@ -1,18 +1,15 @@
 import { BiUser } from "react-icons/bi";
 import { Link } from "react-router-dom";
+import { useAuth } from '@/hooks/useAuth';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { useContext } from "react";
-import { AuthContext } from "@/contexts/AuthContext";
-import { useAuth } from '@/hooks/useAuth';
 
 const ProfileMenu = () => {
-  const { accessToken} = useContext(AuthContext);
-  const { logout } = useAuth();
+  const { logout, accessToken } = useAuth();
 
   return (
     <DropdownMenu>
