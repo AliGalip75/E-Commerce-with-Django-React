@@ -4,6 +4,9 @@ import ProfileInfo from "@/components/profile/ProfileInfo";
 import SidebarMenu from "@/components/profile/SidebarMenu";
 import { useAuth } from "@/hooks/useAuth";
 import useAxios from "@/hooks/useAxios";
+import { motion } from "framer-motion";
+
+
 
 const Profile = () => {
     const [profile, setProfile] = useState(null);
@@ -23,22 +26,21 @@ const Profile = () => {
                 setLoading(false);
             }
         };
-
         fetchProfile();
     }, [accessToken]);
 
     return (
-        <div className="flex justify-center pt-10">
+        <div className="flex justify-center pt-10 bg-zinc-50 dark:bg-zinc-900">
             <div className="container">
                 {loading && !profile ? (
-                    <div className="flex justify-center items-center py-10">
-                        <div
-                            className="w-12 h-12 border-4 border-gray-300 border-t-blue-500 rounded-full"
+                    <div className="flex justify-center min-h-screen items-center py-10">
+                        <motion.div
+                            className="w-12 h-full border-4 border-gray-300 border-t-zinc-950 rounded-full"
                             animate={{ rotate: 360 }}
                             transition={{
-                            duration: 1,
-                            repeat: Infinity,
-                            ease: "linear"
+                                duration: 1,
+                                repeat: Infinity,
+                                ease: "linear"
                             }}
                         />
                     </div>

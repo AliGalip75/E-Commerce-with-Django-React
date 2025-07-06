@@ -2,7 +2,6 @@ import React from "react";
 import { Button } from "@/components/ui/button";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
-import { useCart } from "@/hooks/useCart";
 import { useAuth } from "@/hooks/useAuth";
 import useAxios from "@/hooks/useAxios";
 
@@ -21,11 +20,11 @@ const OrderSummaryCard = ({ items }) => {
 
   const handleCheckout = async () => {
     try {
-      if (!accessToken) {
-        return navigate("/accounts/login", { state: { from: "/cart" } });
-      }
       if (items.length === 0) {
         throw "sepette ürün yok";
+      }
+      if (!accessToken) {
+        return navigate("/accounts/login", { state: { from: "/cart" } });
       }
       await axios.post("orders/"); 
       toast.success("Sipariş oluşturuldu!");

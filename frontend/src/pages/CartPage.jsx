@@ -57,9 +57,9 @@ const Cart = () => {
                         <h2 className="text-xl font-semibold mb-4">Sepetim</h2>
                         
                         {loading ? (
-                            <div className="flex justify-center items-center py-10">
+                            <div className="flex justify-center min-h-screen items-center py-10">
                                 <motion.div
-                                    className="w-12 h-12 border-4 border-gray-300 border-t-blue-500 rounded-full"
+                                    className="w-12 h-12 border-4 border-gray-300 border-t-zinc-950 rounded-full"
                                     animate={{ rotate: 360 }}
                                     transition={{
                                         duration: 1,

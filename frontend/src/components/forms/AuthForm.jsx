@@ -12,7 +12,7 @@ import {
   FormLabel,
   FormMessage
 } from "@/components/ui/form";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { toast } from "react-hot-toast";
 
 
@@ -28,21 +28,33 @@ const AuthForm = () => {
     },
   });
 
+  const { formState: { isSubmitting } } = form;
+
   const onSubmit = async (values) => {
     try {
-      await toast.promise(
-        login(values.email, values.password, () => navigate("/")),
-        {
-          loading: "Giriş yapılıyor...",
-          success: "Giriş başarılı!",
-          error: (err) =>
-            err?.response?.data?.detail ||
-            err?.response?.data?.non_field_errors?.[0] ||
-            "Giriş başarısız.",
-        }
-      );
+      console.log(values);  // email ve password geliyor mu?
+      await login(values.email, values.password, () => navigate("/"));
     } catch (err) {
       console.error("Login error:", err);
+      if (err.response && err.response.data) {
+        const errors = err.response.data;
+        if (errors.email) {  
+          form.setError("email", { type: "server", message: errors.email[0] });
+        }
+        if (errors.password) {
+          form.setError("password", { type: "server", message: errors.password[0] });
+        }
+        if (errors.non_field_errors) {
+          form.setError("root", {
+            type: "server",
+            message: errors.non_field_errors[0]
+          });
+        }
+
+        
+      } else {
+        toast.error("Bilinmeyen bir hata oluştu.");
+      }
     }
   };
 
@@ -58,7 +70,7 @@ const AuthForm = () => {
             <FormItem>
               <FormLabel>E-posta</FormLabel>
               <FormControl>
-                <Input type="email" placeholder="ornek@mail.com" {...field} />
+                <Input type="email" placeholder="ornek@mail.com"  {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -71,7 +83,10 @@ const AuthForm = () => {
           name="password"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Şifre</FormLabel>
+              <FormLabel className="justify-between">
+                Şifre
+                <Link to="#" className="text-blue-700 dark:text-white cursor-pointer font-bold" >Şifreni mi unuttun?</Link>
+              </FormLabel>
               <FormControl>
                 <Input type="password" placeholder="******" {...field} />
               </FormControl>
@@ -80,9 +95,12 @@ const AuthForm = () => {
           )}
         />
         
-        <Button type="submit" className="w-full">
-          Giriş Yap
+        <Button type="submit" className="w-full cursor-pointer bg-zinc-950 dark:bg-white hover:bg-zinc-900" disabled={isSubmitting}>
+          {isSubmitting ? "Giriş Yapılıyor..." : "Giriş Yap"}
         </Button>
+        <div className="flex justify-center">
+          <Link to="/accounts/register" className="font-light">Hesabın yok mu? <strong>Kayıt Ol.</strong></Link>
+        </div>
         
       </form>
     </Form>

@@ -1,37 +1,18 @@
-{/**
-  
-  import Logo from '../components/Logo';
-import RegisterForm from '../components/forms/RegisterForm';
-import { useRegisterForm } from '../hooks/useRegisterForm';
+import RegisterForm from "@/components/forms/RegisterForm";
+import Logo from "@/components/Logo";
 
-const Register = () => {
-  const { 
-    formData, 
-    errors, 
-    isSubmitting, 
-    handleInputChange, 
-    handleSubmit 
-  } = useRegisterForm();
-
+const RegisterPage = () => {
   return (
-    <div className="flex flex-col h-full dark:text-gray-300">
-      <div className="h-[30%] flex justify-center items-end mt-5">
-        <Logo />
-      </div>
-      
-      <div className="h-[70%] flex justify-center items-center mb-5">
-        <RegisterForm
-          formData={formData}
-          errors={errors}
-          isSubmitting={isSubmitting}
-          onInputChange={handleInputChange}
-          onSubmit={handleSubmit}
-        />
+    <div className="flex flex-col min-h-screen justify-center items-center p-4 dark:text-white bg-gray-50 dark:bg-zinc-900">
+      <Logo />
+      <div className="w-full max-w-lg mt-10 p-8 bg-white dark:bg-zinc-900 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700">
+        <h1 className="text-3xl font-bold mb-6 text-center text-gray-900 dark:text-white">
+          Kayıt Ol
+        </h1>
+        <RegisterForm />
       </div>
     </div>
   );
 };
 
-export default Register;
-  
-  */}
+export default RegisterPage;
