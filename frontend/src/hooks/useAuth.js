@@ -4,14 +4,12 @@ import { AuthContext } from '../contexts/AuthContext';
 import { AuthService } from '../services/authService';
 import { mergeLocalCartToBackend } from '@/utils/mergeLocalCartToBackend';
 import toast from 'react-hot-toast';
-import { useCart } from '@/hooks/useCart';
 import useAxios from "@/hooks/useAxios";
 
 export const useAuth = () => {
   const axios = useAxios();
   const navigate = useNavigate();
-  const { user, setUser, accessToken, setAccessToken, setLoading, loading} = useContext(AuthContext);
-  const { updateCartCount } = useCart();
+  const { user, setUser, accessToken, profile, setProfile, setAccessToken, setLoading, loading} = useContext(AuthContext);
 
 
   const login = async (email, password, redirectCallback) => {
@@ -20,11 +18,12 @@ export const useAuth = () => {
 
       const data = await AuthService.login(axios, email, password);
       setAccessToken(data.access);
+
+      axios.defaults.headers.common["Authorization"] = `Bearer ${data.access}`;
       
       // Sepet birleştirme
       await mergeLocalCartToBackend(axios);
       window.dispatchEvent(new Event("cartUpdated"));
-      updateCartCount();
       
       if (redirectCallback) redirectCallback();
       
@@ -79,6 +78,8 @@ export const useAuth = () => {
     fetchUserProfile,
     isAuthenticated: !!user,
     loading,
+    profile,
+    setProfile,
     accessToken,
     setAccessToken
   };

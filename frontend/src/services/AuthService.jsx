@@ -4,11 +4,6 @@ export const AuthService = {
     return res.data;
   },
 
-  async refreshToken(axios) {
-    const res = await axios.post("accounts/token/refresh/", {}, { withCredentials: true });
-    return res.data;
-  },
-
   async getProfile(axios) {
     const res = await axios.get("accounts/users/profile/");
     return res.data;

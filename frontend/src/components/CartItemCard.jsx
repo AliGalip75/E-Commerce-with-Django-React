@@ -8,9 +8,9 @@ import toast from "react-hot-toast";
 const CartItemCard = ({ item }) => {
   const axios = useAxios();
   const { accessToken } = useAuth();
-  const { updateCartCount } = useCart();
+  const { updateCartCount, incCartCount, decCartCount } = useCart();
 
-  const updateQuantity = async (newQty) => {
+  const updateQuantity = async (newQty, type) => {
     try {
       if (accessToken) {
         await axios.patch(`cart/${item.id}/`, { quantity: newQty });
@@ -21,8 +21,14 @@ const CartItemCard = ({ item }) => {
         );
         localStorage.setItem("cart", JSON.stringify(updatedCart));
       }
-      updateCartCount();
+
       window.dispatchEvent(new Event("cartUpdated"));
+      if (type==="inc") {
+        incCartCount();
+      } else {
+        decCartCount();
+      }
+
     } catch (error) {
       toast.error("Miktar güncellenemedi.");
     }
@@ -58,9 +64,9 @@ const CartItemCard = ({ item }) => {
         </div>
       </div>
       <div className="flex gap-2 items-center">
-        <Button onClick={() => updateQuantity(item.quantity - 1)} className="cursor-pointer" disabled={item.quantity === 1}>-</Button>
+        <Button onClick={() => updateQuantity(item.quantity - 1, "dec")} className="cursor-pointer" disabled={item.quantity === 1}>-</Button>
         <QuantityDisplay quantity={item.quantity} />
-        <Button onClick={() => updateQuantity(item.quantity + 1)} className="cursor-pointer">+</Button>
+        <Button onClick={() => updateQuantity(item.quantity + 1, "inc")} className="cursor-pointer">+</Button>
         <Button variant="destructive" onClick={deleteItem}  className="cursor-pointer dark:bg-red-500">Sil</Button>
       </div>
     </div>

@@ -19,7 +19,7 @@ const AppRoute = () => {
                     <Route index element={<HomePage />} />
                     <Route path='cart' element={<CartPage />} />
                     <Route path='products/:id' element={<ProductDetailPage />} />
-                    <Route path='profile' element={<ProfilePage />} /> {/** <PrivateRoute> <Profile /> <PrivateRoute /> */}
+                    <Route path='profile' element={<PrivateRoute><ProfilePage /></PrivateRoute>} />
                 </Route>
                 <Route path='/accounts/' element={<AccountLayout />}>
                     <Route path='login' element={<LoginPage />} />

@@ -9,7 +9,7 @@ import { motion } from "framer-motion";
 
 
 const Profile = () => {
-    const [profile, setProfile] = useState(null);
+    const { profile, setProfile } = useAuth();
     const { accessToken } = useAuth();
     const [activeSection, setActiveSection] = useState("orders");
     const [loading, setLoading] = useState(true);
@@ -19,6 +19,7 @@ const Profile = () => {
         const fetchProfile = async () => {
             try {
                 const data = await AuthService.getProfile(axios);
+                console.log(data)
                 setProfile(data); 
             } catch (error) {
                 console.error("Profil verisi alınamadı", error);
@@ -46,7 +47,7 @@ const Profile = () => {
                     </div>
                 ) : (
                     <div className="flex flex-row">
-                        <div className="basis-1/6 me-10">
+                        <div className="basis-1/6 me-10 mb-10">
                             <SidebarMenu 
                                 fullName={profile.full_name} 
                                 setActiveSection={setActiveSection}
@@ -54,7 +55,7 @@ const Profile = () => {
                             />
                         </div>
                         <div className="basis-5/6">
-                            <ProfileInfo profile={profile} activeSection={activeSection} />
+                            <ProfileInfo activeSection={activeSection} />
                         </div>
                     </div>
                 )}

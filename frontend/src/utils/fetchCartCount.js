@@ -2,6 +2,7 @@
 export const fetchCartCount = async (axios, accessToken) => {
   try {
     if (accessToken) {
+      // console.log("🛒 Sepet verisi çekiliyor...");
       const response = await axios.get("cart/");
       return response.data.reduce((sum, item) => sum + item.quantity, 0);
     } else {

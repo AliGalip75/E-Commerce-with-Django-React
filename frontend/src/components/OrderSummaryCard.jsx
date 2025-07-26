@@ -4,12 +4,10 @@ import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 import useAxios from "@/hooks/useAxios";
+import { useCart } from "@/hooks/useCart";
 
 const OrderSummaryCard = ({ items }) => {
-  const total = items.reduce(
-    (sum, item) => sum + item.product.price * item.quantity,
-    0
-  );
+  const total = items.reduce((sum, item) => sum + item.product.price * item.quantity,0);
 
   const KDV = total * 0.10;
   const finalTotal = total + KDV;
@@ -17,6 +15,7 @@ const OrderSummaryCard = ({ items }) => {
   const navigate = useNavigate();
   const { accessToken } = useAuth();
   const axios = useAxios();
+  const { setCartCount } = useCart();
 
   const handleCheckout = async () => {
     try {
@@ -27,6 +26,11 @@ const OrderSummaryCard = ({ items }) => {
         return navigate("/accounts/login", { state: { from: "/cart" } });
       }
       await axios.post("orders/"); 
+
+      // Sepeti temizle
+      setCartCount(0); // CartContext sıfırla
+      localStorage.removeItem("cart"); // anonymous kullanıcı için local sepeti temizle
+      window.dispatchEvent(new Event("cartUpdated")); // diğer component'lere bildir
       toast.success("Sipariş oluşturuldu!");
       navigate("/");
     } catch (err) {

@@ -22,15 +22,14 @@ const ProductCard = ({ product }) => {
       if (accessToken) {
         await axios.post("cart/", { product_id: productId });
       } else {
+        {/** Sepette hiç yoksa oluştur, varsa bir artır */}
         const localCart = JSON.parse(localStorage.getItem("cart")) || [];
         const existingItemIndex = localCart.findIndex(item => item.product_id === productId);
-
-        if (existingItemIndex !== -1) {
+        if (existingItemIndex > -1) {
           localCart[existingItemIndex].quantity += 1;
         } else {
           localCart.push({ product_id: productId, quantity: 1 });
         }
-
         localStorage.setItem("cart", JSON.stringify(localCart));
       }
 

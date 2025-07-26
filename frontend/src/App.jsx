@@ -1,10 +1,10 @@
 import AppRoutes from './routes/AppRoutes';
 import { BrowserRouter } from 'react-router-dom';
-import AuthProvider from "./contexts/AuthContext";
 import { CartProvider } from "@/contexts/CartContext";
-import { Toaster } from 'react-hot-toast';
-import { ThemeProvider } from "@/components/theme-provider";
 import ThemeToggle from "@/components/ThemeToggle";
+import { Toaster } from 'react-hot-toast';
+import { ThemeProvider } from "@/contexts/ThemeContext";
+import AuthProvider from "./contexts/AuthContext";
 
 
 const App = () => {

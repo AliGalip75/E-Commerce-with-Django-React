@@ -1,4 +1,5 @@
 from django.db import models
+from django.conf import settings
 import uuid
 from PIL import Image
 import os
@@ -37,12 +38,12 @@ class Category(models.Model):
     
 def product_thumbnail_path(instance, filename):
     ext = filename.split('.')[-1]
-    return f"product_pics/product_{instance.uuid}/thumb.{ext}"
+    return f"product_pics/product_{instance.id}/thumb.{ext}"
 
 def product_gallery_path(instance, filename):
     ext = filename.split('.')[-1]
     new_filename = f"{uuid.uuid4()}.{ext}"
-    return f"product_pics/product_{instance.product.uuid}/gallery/{new_filename}"
+    return f"product_pics/product_{instance.product.id}/gallery/{new_filename}"
 
     
 class Product(models.Model):
@@ -136,3 +137,13 @@ class ProductImage(models.Model):
         db_table = "product_images"
         verbose_name = "Ürün Resmi"
         verbose_name_plural = "Ürün Resimleri"
+        
+        
+        
+class Favorite(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="favorites")
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name="favorited_by")
+    created_at = models.DateTimeField(auto_now_add=True)
+    
+    class Meta:
+        unique_together = ("user", "product") # Aynı ürün favorilere bir defa eklenebilsin

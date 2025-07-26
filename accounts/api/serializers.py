@@ -7,7 +7,7 @@ from ..models import CustomUser
 
 ''' Token + RefreshToken + id + email '''
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
-    username_field = 'email'
+    # username_field = 'email'
     def validate(self, attrs):
         try:
             # Email ile kullanıcı bulunabilir mi kontrolü
@@ -18,15 +18,24 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
                 raise AuthenticationFailed({
                     'detail': 'Email ve şifre zorunludur.'
                 })
-                
+
             # Kullanıcıyı bul
             try:
                 user = CustomUser.objects.get(email=email)
             except CustomUser.DoesNotExist:
-                raise AuthenticationFailed({'detail': 'Geçersiz email veya şifre.'})
+                raise AuthenticationFailed({
+                    'email': ['Geçersiz e-posta veya şifre.'],
+                    'password': ['Geçersiz e-posta veya şifre.']
+                })
 
             if not user.check_password(password):
-                raise AuthenticationFailed({'detail': 'Geçersiz email veya şifre.'})
+                raise AuthenticationFailed({
+                    'email': ['Geçersiz e-posta veya şifre.'],
+                    'password': ['Geçersiz e-posta veya şifre.']
+                })
+
+            if not user.is_active:
+                raise AuthenticationFailed({'detail': 'Hesabınız devre dışı bırakılmış.'})
 
             # Kullanıcı doğrulandıysa
             self.user = user  # eklemezsek token oluşturulamaz
@@ -37,7 +46,8 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
             raise e
         except Exception:
             raise AuthenticationFailed({
-                'detail': 'Geçersiz email veya şifre.',
+                'email': ['Geçersiz e-posta veya şifre.'],
+                'password': ['Geçersiz e-posta veya şifre.']
             })
     
 ''' User görüntüleme '''
@@ -109,6 +119,7 @@ class CustomUserCreateUpdateSerializer(serializers.ModelSerializer):
     def validate_password(self, value):
         if len(value) < 6:
             raise serializers.ValidationError("Şifre en az 6 karakter olmalı.")
+        return value
     
     def get_full_name(self, obj):
         if hasattr(obj, 'get_full_name'):

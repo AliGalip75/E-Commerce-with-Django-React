@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import useAxios from "@/hooks/useAxios";
 import CartItemCard from "@/components/CartItemCard";
 import OrderSummaryCard from "@/components/OrderSummaryCard";
@@ -8,14 +8,14 @@ import {
   AlertTitle,
   AlertDescription
 } from "@/components/ui/alert";
-import { AuthContext } from '@/contexts/AuthContext';
+import { useAuth } from '@/hooks/useAuth';
 
 
 const Cart = () => {
     const axios = useAxios();
     const [cartItems, setCartItems] = useState([]);
     const [loading, setLoading] = useState(true);
-    const { accessToken } = useContext(AuthContext);
+    const { accessToken } = useAuth();
     
     useEffect(() => {
         const fetchCart = async () => {

@@ -32,8 +32,8 @@ const AuthForm = () => {
 
   const onSubmit = async (values) => {
     try {
-      console.log(values);  // email ve password geliyor mu?
       await login(values.email, values.password, () => navigate("/"));
+      toast.success("Giriş başarılı.");
     } catch (err) {
       console.error("Login error:", err);
       if (err.response && err.response.data) {
@@ -85,7 +85,7 @@ const AuthForm = () => {
             <FormItem>
               <FormLabel className="justify-between">
                 Şifre
-                <Link to="#" className="text-blue-700 dark:text-white cursor-pointer font-bold" >Şifreni mi unuttun?</Link>
+                <Link to="#" className="text-blue-700 dark:text-white cursor-pointer font-normal" >Şifreni mi unuttun?</Link>
               </FormLabel>
               <FormControl>
                 <Input type="password" placeholder="******" {...field} />

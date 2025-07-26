@@ -24,7 +24,6 @@ const ProductDetail = () => {
     fetchProduct();
   }, [id]);
 
-
   return (
     <>
       {loading ? (

@@ -7,12 +7,11 @@ const AuthProvider = ({ children }) => {
   const [accessToken, setAccessToken] = useState(null);
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [profile, setProfile] = useState({});
   const API_BASE_URL = 'http://localhost:8000/api/';
 
-  {/** Sayfa yenilenince refresh varsa access token'ı yenile */}
   useEffect(() => {
     const refreshAccessToken = async () => {
-      setLoading(true);
       try {
         const response = await axios.post(
           `${API_BASE_URL}accounts/token/refresh/`,
@@ -21,21 +20,26 @@ const AuthProvider = ({ children }) => {
         );
         setAccessToken(response.data.access);
       } catch (err) {
-        console.error("error : ", err);
+        console.error("Token yenileme başarısız:", err);
         setAccessToken(null);
         setUser(null);
-      } finally {
-        setLoading(false);
       }
-    }
+    };
+
     refreshAccessToken();
+
+    const interval = setInterval(refreshAccessToken, 9 * 60 * 1000); // ! Token'ı expire süresinden 1 dk önce yenile
+    return () => clearInterval(interval);
   }, []);
+
 
   return (
     <AuthContext.Provider value={{
       accessToken,
       setAccessToken,
       user,
+      profile,
+      setProfile,
       setUser,
       loading,
       setLoading}}
@@ -46,3 +50,4 @@ const AuthProvider = ({ children }) => {
 };
 
 export default AuthProvider;
+
