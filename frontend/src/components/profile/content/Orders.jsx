@@ -1,23 +1,23 @@
 import { useOrders } from "@/hooks/useOrders";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
-import { Skeleton } from "@/components/ui/skeleton";
+import { motion } from "framer-motion"; 
 import { Link } from "react-router-dom";
 
 const Orders = ({activeSection}) => {
     const { orders, loading } = useOrders(activeSection === "orders");
     if (loading) {
       return (
-        <div className="space-y-4">
-          {[...Array(2)].map((_, i) => (
-            <Card key={i}>
-              <CardContent className="p-4 space-y-3">
-                <Skeleton className="h-4 w-2/3" />
-                <Skeleton className="h-4 w-1/2" />
-                <Skeleton className="h-24 w-full" />
-              </CardContent>
-            </Card>
-          ))}
+        <div className="flex justify-center min-h-screen items-center py-10">
+            <motion.div
+                className="w-12 h-12 border-4 border-gray-300 border-t-zinc-950 rounded-full"
+                animate={{ rotate: 360 }}
+                transition={{
+                    duration: 1,
+                    repeat: Infinity,
+                    ease: "linear"
+                }}
+            />
         </div>
       );
     }

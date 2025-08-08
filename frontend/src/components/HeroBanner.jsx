@@ -1,6 +1,7 @@
 import { animate, stagger } from "motion"
 import { splitText } from "motion-plus"
 import { useEffect, useRef } from "react"
+import { Button } from "./ui/button";
 
 const HeroBanner = () => {
   const containerRef = useRef(null);
@@ -34,7 +35,7 @@ const HeroBanner = () => {
       
       {/* Background Image */}
       <img
-        src="src/assets/yasıo-1.jpg" // Görsel yolunu değiştir
+        src="src/assets/ecommerce-banner.jpg" // Görsel yolunu değiştir
         alt="Hero"
         className="w-full h-full object-cover select-none"
       />
@@ -44,9 +45,9 @@ const HeroBanner = () => {
         <p className="text-lg md:text-xl text-white mb-6 max-w-xl select-none">
           Morbi mattis lectus blandit augue scelerisque, a fermentum elit blandit.
         </p>
-        <button className="bg-white text-black px-6 py-2 rounded hover:bg-gray-100 transition select-none">
-          Neque
-        </button>
+        <Button className="bg-white text-gray-900 hover:bg-gray-100 ">
+          Keşfet
+        </Button>
       </div>
       
     </section>

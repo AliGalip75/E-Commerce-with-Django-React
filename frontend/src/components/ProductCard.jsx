@@ -1,3 +1,4 @@
+import { useState, useEffect } from 'react';
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import toast from "react-hot-toast";
@@ -7,15 +8,22 @@ import useAxios from "@/hooks/useAxios";
 import { motion } from "framer-motion"; 
 import { useNavigate } from "react-router-dom";
 import { SessionStorageManager } from "@/utils/sessionStorageManager";
+import FavoriteButton from "./FavoriteButton";
 
 
 const MotionCard = motion.create(Card);
-
+ 
 const ProductCard = ({ product }) => {
   const axios = useAxios();
   const { incCartCount } = useCart();
   const { accessToken } = useAuth();
   const navigate = useNavigate();
+  const [isFavorited, setIsFavorited] = useState(true);
+
+  useEffect(() => {
+    console.log(product)
+    setIsFavorited(product.is_favorited);
+  }, [])
 
   const handleAddToCart = async (productId) => {
     try {
@@ -55,7 +63,7 @@ const ProductCard = ({ product }) => {
       transition={{ duration: 0.4 }}
       whileHover={{ scale: 1.01 }}
       viewport={{ once: true }}
-      className="w-full max-w-sm rounded-2xl shadow-md bg-white hover:shadow-lg dark:bg-zinc-900 max-h-[500px] cursor-pointer"
+      className="relative w-full max-w-sm rounded-2xl shadow-md bg-white hover:shadow-lg dark:bg-zinc-900 max-h-[500px] cursor-pointer"
     >
       {/* Ürün resmi */}
       <img
@@ -63,6 +71,7 @@ const ProductCard = ({ product }) => {
         alt={product.name}
         className="w-full h-50 object-cover"
       />
+      <FavoriteButton productId={product.id} isFavorited={isFavorited} setIsFavorited={setIsFavorited}/>
 
       <CardContent className="p-4 space-y-1">
         {/* Kategori adı */}

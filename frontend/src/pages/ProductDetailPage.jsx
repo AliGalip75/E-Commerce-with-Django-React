@@ -22,6 +22,7 @@ const ProductDetail = () => {
       }
     }
     fetchProduct();
+    window.scrollTo(0, 0);
   }, [id]);
 
   return (
@@ -39,18 +40,23 @@ const ProductDetail = () => {
           />
         </div>
       ) : (
-        <motion.div
-          className="max-w-xl mx-auto p-4"
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.4 }}
-          >
-            <img src={product.image} alt={product.name} className="w-full mb-4" />
-            <h1 className="text-2xl font-bold">{product.name}</h1>
-            <p className="text-sm text-muted-foreground">{product.category?.name}</p>
-            <p className="mt-2">{product.description}</p>
-            <p className="mt-4 text-xl font-bold">{parseFloat(product.price).toFixed(2)} ₺</p>
-        </motion.div>
+        <div className="w-full flex justify-center h-dvh">
+          <div className="container flex mt-10 ">
+            <motion.div
+              className="max-w-xl p-4"
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.4 }}
+              >
+                <img src={product.image} alt={product.name} className="w-full mb-4 rounded-xl" />
+                <h1 className="text-2xl font-bold">{product.name}</h1>
+                <p className="text-sm text-muted-foreground">{product.category?.name}</p>
+                <p className="mt-2">{product.description}</p>
+                <p className="mt-4 text-xl font-bold">{parseFloat(product.price).toFixed(2)} ₺</p>
+            </motion.div>
+            <div className="bg-red-500 flex-1"></div>
+          </div>
+        </div>
       )} 
     </>
   );

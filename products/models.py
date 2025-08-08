@@ -1,5 +1,5 @@
 from django.db import models
-from django.conf import settings
+from accounts.models import CustomUser as User
 import uuid
 from PIL import Image
 import os
@@ -138,12 +138,16 @@ class ProductImage(models.Model):
         verbose_name = "Ürün Resmi"
         verbose_name_plural = "Ürün Resimleri"
         
-        
-        
-class Favorite(models.Model):
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="favorites")
+               
+class FavoriteProduct(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="favorites")
     product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name="favorited_by")
     created_at = models.DateTimeField(auto_now_add=True)
     
     class Meta:
+        db_table = "favorite_product"
         unique_together = ("user", "product") # Aynı ürün favorilere bir defa eklenebilsin
+        ordering = ['-created_at'] # En son eklenen favoriyi en üstte gösterir.
+    
+    def __str__(self):
+        return f"{self.user.username} favoriledi: {self.product.name}"

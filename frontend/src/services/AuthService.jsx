@@ -9,6 +9,19 @@ export const AuthService = {
     return res.data;
   },
 
+  async updateProfile(axios, userData, accessToken) {
+    const res = await axios.patch(
+      "accounts/users/profile/update/",
+       userData, 
+       {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+       }
+      );
+    return res.data;
+  },
+
   async logout(axios) {
     const res = await axios.post("accounts/token/logout/", {}, { withCredentials: true });
     return res.data;
@@ -18,5 +31,4 @@ export const AuthService = {
     const res = await axios.post("/accounts/token/", { email, password }, { withCredentials: true });
     return res.data; // sadece access döner
   }
-
 };

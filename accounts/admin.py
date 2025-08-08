@@ -1,13 +1,18 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
+from django.contrib.auth.admin import GroupAdmin as BaseGroupAdmin
 from .models import CustomUser
-from django.contrib.auth.models import Group
 from .forms import UserChangeForm, UserCreationForm
+from django.contrib.auth.models import Group
 
-class CustomUserAdmin(BaseUserAdmin):
+admin.site.unregister(Group)
+
+@admin.register(CustomUser)
+class CustomUserAdmin(BaseUserAdmin): 
     model = CustomUser
     form = UserChangeForm
     add_form = UserCreationForm
+
     list_display = ("email", "first_name", "last_name", "role", "is_active", "is_staff", "date_joined")
     list_filter = ("role", "is_active", "is_staff", "email_verified", "phone_verified")
     search_fields = ("email", "first_name", "last_name", "phone")
@@ -30,7 +35,7 @@ class CustomUserAdmin(BaseUserAdmin):
     )
 
     readonly_fields = ("date_joined", "last_updated", "last_login", "birth_date")
-    
-    
-admin.site.register(CustomUser, CustomUserAdmin)
-admin.site.unregister(Group)
+
+@admin.register(Group)
+class GroupAdmin(BaseGroupAdmin):
+    pass

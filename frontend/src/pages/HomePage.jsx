@@ -1,24 +1,34 @@
-// Home.jsx
 import React, { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import useAxios from "@/hooks/useAxios";
 import HeroBanner from "../components/HeroBanner";
 import CategoryScroller from "@/components/CategoryScroller";
 import ProductCard from "@/components/ProductCard";
-import { FaArrowLeft, FaArrowRight, FaArrowDown } from "react-icons/fa";
+import { useCartInit } from "@/hooks/useCartInit";
 import { SessionStorageManager } from '@/utils/sessionStorageManager';
 import { motion } from "framer-motion"; 
+import { SlArrowLeft } from "react-icons/sl";
+import { SlArrowRight } from "react-icons/sl";
+import { useAuth } from '@/hooks/useAuth';
 
 const HomePage = () => {
   const [categories, setCategories] = useState([]);
   const axios = useAxios();
   const [products, setProducts] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const { loading, setLoading, isReady }  = useAuth();
   const scrollRef = useRef(null);
   const [scrollPositionRestored, setScrollPositionRestored] = useState(false); // Önceki sayfanın scroll değerini sakla
+  const [initialLoadDone, setInitialLoadDone] = useState(false);
+
+  useCartInit(); // giriş yapılınca sepeti çek
 
   useEffect(() => {
     const fetchData = async () => {
       try {
+        // Refresh işlemi ile token yenileme bitmeden veri çekmeye çalışmasın diye
+        if (!isReady) {
+          return
+        }
+        setLoading(true);
         const [categoryRes, productRes] = await Promise.all([
           axios.get("categories/"),
           axios.get("products/populer/")
@@ -33,8 +43,11 @@ const HomePage = () => {
       }
     };
 
-    fetchData();
-  }, []);
+    if (isReady && !initialLoadDone) {
+      fetchData();
+      setInitialLoadDone(true);
+    }
+  }, [isReady, initialLoadDone]);
 
   useLayoutEffect(() => {
     if (!loading && products.length && !scrollPositionRestored) {
@@ -46,19 +59,6 @@ const HomePage = () => {
       }
     }
   }, [loading, products, scrollPositionRestored]);
-
-
-
-  const scrollToSection = () => {
-    const element = document.getElementById("targetDiv");
-    if (element) {
-      const yOffset = -76; // Yukarıya 76px kaydır(navbar nedeniyle)
-      const y = element.getBoundingClientRect().top + window.pageYOffset + yOffset;
-
-      window.scrollTo({ top: y, behavior: "smooth" });
-    }
-  };
-
 
   // Tıklanan butona göre kaydır
   const handleScroll = (direction) => {
@@ -99,14 +99,14 @@ const HomePage = () => {
       ) : (
         <>
           <HeroBanner />
-          <div className="flex justify-center relative mt-5 mx-5">
+          <div className="flex justify-center relative my-10 mx-5">
             <div className="flex items-center justify-between container">
               <div className="group">
                 <button
                   onClick={() => handleScroll("left")}
-                  className="rounded-full border-3 border-zinc-800 p-4 transform transition-all duration-300 group-hover:-translate-x-1.5 cursor-pointer"
+                  className="transform transition-all duration-300 group-hover:-translate-x-1.5 cursor-pointer"
                 >
-                  <FaArrowLeft className="size-5" />
+                  <SlArrowLeft className="size-7 mt-2"/>
                 </button>
               </div>
 
@@ -115,30 +115,23 @@ const HomePage = () => {
               <div className="group">
                 <button
                   onClick={() => handleScroll("right")}
-                  className="rounded-full border-3 border-zinc-800 bg-gray-100 dark:bg-zinc-900 p-4 transform transition-all duration-300 group-hover:translate-x-1.5 cursor-pointer"
+                  className="transform transition-all duration-300 group-hover:translate-x-1.5 cursor-pointer"
                 >
-                  <FaArrowRight className="size-5" />
+                  <SlArrowRight className="size-7 mt-2"/>
                 </button>
               </div>
             </div>
           </div>
 
           <br />
-          <div className="w-full h-[100px] flex justify-center items-center dark:text-white mt-5">
-            <div
-              onClick={scrollToSection}
-              className="rounded-full border-3 animate-bounce border-zinc-800 bg-gray-100 dark:bg-zinc-900 p-4 cursor-pointer"
-            >
-              <FaArrowDown className="fill-current size-5" />
-            </div>
-          </div>
+          
 
           <div id="targetDiv" className="flex flex-col">
             <h2 className="flex justify-center text-3xl pt-20">Popüler Ürünler</h2>
             <div className="flex justify-center flex-wrap pt-10 mb-10">
               <div className="container flex justify-center flex-wrap gap-10">
                 {products.map((product) => (
-                  <ProductCard key={product.id} product={product} />
+                  <ProductCard key={product.id} product={product}/>
                 ))}
               </div>
             </div>

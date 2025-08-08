@@ -41,7 +41,7 @@ class UserChangeForm(forms.ModelForm):
 
     class Meta:
         model = CustomUser
-        fields = '__all__'  # veya ['email', 'first_name', 'last_name', ...] gibi
+        fields = '__all__'  
 
     def clean_password(self):
         # Admin panelde kullanıcıyı kaydederken mevcut şifreyi koru

@@ -6,7 +6,15 @@ module.exports = {
     "./src/**/*.{js,jsx,ts,tsx}", // Eğer sadece JS kullanıyorsan tsx çıkarabilirsin
   ],
   theme: {
-    extend: {},
+    extend: {
+      scrollbar: {
+        hide: {
+          '-webkit-overflow-scrolling': 'touch',
+          'scrollbar-width': 'none',
+          '-ms-overflow-style': 'none',
+        },
+      },
+    },
   },
   plugins: [],
 }

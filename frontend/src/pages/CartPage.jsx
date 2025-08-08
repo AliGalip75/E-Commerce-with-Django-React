@@ -10,7 +10,6 @@ import {
 } from "@/components/ui/alert";
 import { useAuth } from '@/hooks/useAuth';
 
-
 const Cart = () => {
     const axios = useAxios();
     const [cartItems, setCartItems] = useState([]);
@@ -20,6 +19,7 @@ const Cart = () => {
     useEffect(() => {
         const fetchCart = async () => {
             try {
+                // Kullanıcı giriş yapmamışsa sepeti lokalden çek
                 if (!accessToken) {
                     const localCart = JSON.parse(localStorage.getItem("cart")) || [];
                     const detailedCart = await Promise.all(
@@ -32,6 +32,7 @@ const Cart = () => {
                         })
                     );
                     setCartItems(detailedCart);
+                // Kullanıcı giriş yapmışsa kendi sepetini getir
                 } else {
                     const response = await axios.get("cart/");
                     setCartItems(response.data);
@@ -44,10 +45,11 @@ const Cart = () => {
         };
         fetchCart();
         
+        // Proje genelinden sepet güncelleme fonksiyonuna erişmek için eventListener oluşturduk
         const handleCartUpdate = () => fetchCart();
         window.addEventListener("cartUpdated", handleCartUpdate);
         return () => window.removeEventListener("cartUpdated", handleCartUpdate);
-    }, [accessToken]);
+    }, []); //!
 
     return (
         <div className="w-full flex justify-center">

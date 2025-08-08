@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from products.models import Product, Category, Favorite
+from products.models import Product, Category, FavoriteProduct
 
 class CategorySerializer(serializers.ModelSerializer):
     children = serializers.PrimaryKeyRelatedField(many=True, read_only=True)
@@ -31,7 +31,6 @@ class ProductReadSerializer(serializers.ModelSerializer):
     class Meta:
         model = Product
         fields = "__all__"
-        read_only_fields = ["id"]
         
     def get_is_favorited(self, obj):
         user = self.context["request"].user
@@ -42,12 +41,12 @@ class ProductReadSerializer(serializers.ModelSerializer):
         
 class FavoriteWriteSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Favorite
+        model = FavoriteProduct
         fields = ['product']
         
         
 class FavoriteReadSerializer(serializers.ModelSerializer):
     product = ProductReadSerializer(read_only=True)
     class Meta:
-        model = Favorite
+        model = FavoriteProduct
         fields = ["id", "product", "created_at"]

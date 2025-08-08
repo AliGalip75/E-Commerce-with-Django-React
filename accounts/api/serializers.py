@@ -112,8 +112,13 @@ class CustomUserCreateUpdateSerializer(serializers.ModelSerializer):
         ]
         
     def validate_email(self, value):
-        if CustomUser.objects.filter(email=value).exists():
-            raise serializers.ValidationError("Bu e-posta adresi zaten kayıtlı.")
+        user = self.instance  # update sırasında instance atanır
+        if user:
+            if CustomUser.objects.exclude(id=user.id).filter(email=value).exists():
+                raise serializers.ValidationError("Bu e-posta adresi zaten kayıtlı.")
+        else:
+            if CustomUser.objects.filter(email=value).exists():
+                raise serializers.ValidationError("Bu e-posta adresi zaten kayıtlı.")
         return value
     
     def validate_password(self, value):

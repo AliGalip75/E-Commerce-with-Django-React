@@ -19,7 +19,6 @@ const Profile = () => {
         const fetchProfile = async () => {
             try {
                 const data = await AuthService.getProfile(axios);
-                console.log(data)
                 setProfile(data); 
             } catch (error) {
                 console.error("Profil verisi alınamadı", error);
@@ -28,7 +27,7 @@ const Profile = () => {
             }
         };
         fetchProfile();
-    }, [accessToken]);
+    }, []); //!
 
     return (
         <div className="flex justify-center pt-10 bg-zinc-50 dark:bg-zinc-900">

@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Category, Favorite, Product, ProductImage
+from .models import Category, FavoriteProduct, Product, ProductImage
 
 
 class ProductInline(admin.StackedInline):
@@ -10,7 +10,8 @@ class ProductInline(admin.StackedInline):
 
 class ProductImageInline(admin.TabularInline):
     model = ProductImage
-    extra = 1
+    extra = 3
+    
 
 # verilen category'nin altındaki tüm children'ları dön
 def get_descendants(category):
@@ -66,4 +67,4 @@ class ProductAdmin(admin.ModelAdmin):
 
 admin.site.register(Category, CategoryAdmin)
 admin.site.register(Product, ProductAdmin)
-admin.site.register(Favorite)
+admin.site.register(FavoriteProduct)

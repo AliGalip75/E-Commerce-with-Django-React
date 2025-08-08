@@ -9,7 +9,7 @@ export const useCartInit = () => {
   const { accessToken } = useAuth();
   const axios = useAxios();
 
-  // sadece ilk render'da çalışıri event listener ile tetiklenebilir.
+  // sadece ilk render'da çalışır, event listener ile tetiklenebilir.
   useEffect(() => {
     const fetchAndSetCartCount = async () => {
       const count = await fetchCartCount(axios, accessToken);
@@ -26,5 +26,5 @@ export const useCartInit = () => {
     return () => {
       window.removeEventListener("cartUpdated", handleCartUpdated);
     };
-  }, [accessToken]);
+  }, []); //!
 };

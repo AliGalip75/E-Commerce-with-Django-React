@@ -1,3 +1,4 @@
+// useAuth.js
 import { useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../contexts/AuthContext';
@@ -6,12 +7,14 @@ import { mergeLocalCartToBackend } from '@/utils/mergeLocalCartToBackend';
 import toast from 'react-hot-toast';
 import useAxios from "@/hooks/useAxios";
 
+
 export const useAuth = () => {
   const axios = useAxios();
   const navigate = useNavigate();
-  const { user, setUser, accessToken, profile, setProfile, setAccessToken, setLoading, loading} = useContext(AuthContext);
 
+  const { user, setUser, accessToken, profile, setProfile, setAccessToken, setLoading, loading, isReady, setIsReady} = useContext(AuthContext);
 
+  // Kullanıcı girişi fonksiyonu
   const login = async (email, password, redirectCallback) => {
     try {
       setLoading(true);
@@ -19,9 +22,9 @@ export const useAuth = () => {
       const data = await AuthService.login(axios, email, password);
       setAccessToken(data.access);
 
+      // Axios instance'ına Authorization header eklenir.
       axios.defaults.headers.common["Authorization"] = `Bearer ${data.access}`;
       
-      // Sepet birleştirme
       await mergeLocalCartToBackend(axios);
       window.dispatchEvent(new Event("cartUpdated"));
       
@@ -36,18 +39,16 @@ export const useAuth = () => {
     }
   };
 
+  // Kullanıcı çıkışı fonksiyonu
   const logout = async () => {
     try {
-      await toast.promise(
-        AuthService.logout(axios),
-        {
-          loading: "Çıkış yapılıyor...",
-          success: (response) => response.message || "Çıkış başarılı",
-          error: "Çıkış sırasında bir hata oluştu"
-        },
-      );
+      await toast.promise(AuthService.logout(axios), {
+        loading: "Çıkış yapılıyor...",
+        success: (response) => response.message || "Çıkış başarılı",
+        error: "Çıkış sırasında bir hata oluştu"
+      });
       
-      // Frontend belleğini temizle
+      // Frontend state'leri temizlenir.
       setAccessToken(null);
       setUser(null);
 
@@ -57,6 +58,7 @@ export const useAuth = () => {
     }
   };
 
+  // Kullanıcı profili bilgilerini çekme fonksiyonu
   const fetchUserProfile = async () => {
     try {
       setLoading(true);
@@ -71,13 +73,35 @@ export const useAuth = () => {
     }
   };
 
+  // Profil güncelleme fonksiyonu
+  const updateUserProfile = async (userData) => {
+    setLoading(true);
+    try {
+      const updatedProfile = await AuthService.updateProfile(axios, userData, accessToken);
+      setProfile(updatedProfile);
+      setUser(updatedProfile);
+      toast.success("Profil başarıyla güncellendi");
+      return true;
+    } catch (e) {
+      console.error("Profil güncelleme başarısız:", e.response?.data || e.message);
+      toast.error("Profil güncellenirken bir hata oluştu: " + (e.response && e.response.data ? JSON.stringify(e.response.data) : e.message));
+      return false;
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Bileşenlerin kullanabileceği değerler ve fonksiyonlar döndürülür.
   return { 
     user,
     login,
     logout,
     fetchUserProfile,
-    isAuthenticated: !!user,
+    updateUserProfile,
     loading,
+    setLoading,
+    isReady,
+    setIsReady,
     profile,
     setProfile,
     accessToken,

@@ -103,7 +103,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 # Internationalization
 
-LANGUAGE_CODE = 'tr'
+LANGUAGE_CODE = 'en'
 
 TIME_ZONE = 'Europe/Istanbul'
 
@@ -157,5 +157,6 @@ SPECTACULAR_SETTINGS = {
     'VERSION': '1.0.0',
     'SERVE_INCLUDE_SCHEMA': False, # Schema'yı ayrı bir endpoint'te sunmak için True yapın
 }
+
 
 CORS_ALLOW_CREDENTIALS = True

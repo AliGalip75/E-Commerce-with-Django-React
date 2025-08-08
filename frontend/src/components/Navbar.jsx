@@ -2,10 +2,9 @@ import { Link } from "react-router-dom";
 import { Input } from "@/components/ui/input";
 import ProfileMenu from "@/components/ProfileMenu";
 import CartIcon from "@/components/CartIcon";
-import { useCartInit } from "@/hooks/useCartInit";
+import ThemeToggle from "@/components/ThemeToggle";
 
 const Navbar = () => {
-  useCartInit();
 
   return (
     <div className="container md:mx-auto flex items-center justify-between py-5">
@@ -36,6 +35,7 @@ const Navbar = () => {
         </div>
 
         {/* Profil ve Sepet */}
+        <ThemeToggle />
         <ProfileMenu />
         <CartIcon />
       </div>
