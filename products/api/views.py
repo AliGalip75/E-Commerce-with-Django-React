@@ -1,13 +1,24 @@
-from rest_framework import viewsets, permissions, status
+from rest_framework import viewsets, status
 from products.models import Product, Category
 from products.api.serializers import ProductReadSerializer, ProductWriteSerializer, CategorySerializer
 from products.models import FavoriteProduct
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.permissions import AllowAny, IsAdminUser, IsAuthenticated
+from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework import filters
+from products.api.filters import ProductFilter
+from products.api.filters import ProductSearchFilter
+from products.api.pagination import StandardResultsSetPagination
 
 class ProductViewSet(viewsets.ModelViewSet):
     queryset = Product.objects.all()
+    filter_backends = [DjangoFilterBackend, ProductSearchFilter, filters.OrderingFilter]
+    filterset_class = ProductFilter
+    pagination_class = StandardResultsSetPagination
+    ordering_fields = ["stock"]
+    ordering = ["-id"] #ordering parametresi verilmezse default ordering
+    
     # Farklı action'lar için farklı serializerlar
     def get_serializer_class(self):
         if self.action in ['list', 'retrieve', 'populer']:
@@ -24,11 +35,26 @@ class ProductViewSet(viewsets.ModelViewSet):
         else:
             return [IsAdminUser()]
     
+    # URL: /api/products/populer/
     @action(detail=False, methods=['get'])
     def populer(self, request):
-        populer_products = Product.objects.order_by('-sold_count')[:20] # En çok satılan 20 ürün
-        serializer = self.get_serializer(populer_products, many=True)
+
+        # Tüm ürünleri al
+        queryset = Product.objects.all()
+        
+        # Filtrele
+        queryset = self.filter_queryset(self.get_queryset())
+        
+        # En çok satılandan en az satılana göre sırala
+        queryset = queryset.order_by('-sold_count')
+
+        # İlk 20 popüler ürünler
+        queryset = queryset[:20]
+
+        # Serialize et
+        serializer = self.get_serializer(queryset, many=True)
         return Response(serializer.data)
+
     
     # URL: /api/products/{id}/favorite_toggle/
     @action(detail=True, methods=["POST"], url_path="favorite")
@@ -48,7 +74,4 @@ class ProductViewSet(viewsets.ModelViewSet):
 class CategoryViewSet(viewsets.ModelViewSet):
     serializer_class = CategorySerializer
     permission_classes = [AllowAny]
-    
-    def get_queryset(self):
-        return Category.objects.filter(parent__isnull=True)
-    
+    queryset = Category.objects.filter(is_active=True).prefetch_related('children')   

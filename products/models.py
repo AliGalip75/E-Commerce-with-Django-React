@@ -3,6 +3,7 @@ from accounts.models import CustomUser as User
 import uuid
 from PIL import Image
 import os
+from django.core.exceptions import ValidationError
 
 def category_thumbnail_path(instance, filename):
     ext = filename.split('.')[-1]
@@ -13,6 +14,8 @@ class Category(models.Model):
     name = models.CharField(max_length=100)
     slug = models.SlugField(unique=True)
     is_active = models.BooleanField(default=True)
+    #? str metodunda her sorguda döngü çalışmasın diye
+    cached_path = models.CharField(max_length=500, blank=True, editable=False)
     parent = models.ForeignKey(
         "self",
         on_delete=models.CASCADE,
@@ -35,6 +38,33 @@ class Category(models.Model):
             k = k.parent
         return " -> ".join(full_path[::-1])
     
+    def get_depth(self):
+        depth = 0
+        k = self.parent
+        while k is not None:
+            depth += 1
+            k = k.parent
+        return depth
+
+    def save(self, *args, **kwargs):
+        if self.get_depth() > 3:  # Max 3 seviye
+            raise ValueError("Kategori hiyerarşisi 3 seviyeden derin olamaz.")
+        super().save(*args, **kwargs)
+        
+        full_path = [self.name]
+        k = self.parent
+    
+        while k is not None:
+            full_path.append(k.name)
+            k = k.parent
+        self.cached_path = " -> ".join(full_path[::-1])
+        super().save(update_fields=['cached_path'])
+    
+    #? Kategori kendini parent almasın
+    def clean(self):
+        if self.parent == self:
+            raise ValidationError("Kategori kendi parent'ı olamaz.")
+        super().clean()
     
 def product_thumbnail_path(instance, filename):
     ext = filename.split('.')[-1]

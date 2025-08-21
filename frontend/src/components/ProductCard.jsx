@@ -21,7 +21,6 @@ const ProductCard = ({ product }) => {
   const [isFavorited, setIsFavorited] = useState(true);
 
   useEffect(() => {
-    console.log(product)
     setIsFavorited(product.is_favorited);
   }, [])
 

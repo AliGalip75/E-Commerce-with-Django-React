@@ -5,6 +5,7 @@ import CartPage from '../pages/CartPage';
 import LoginPage from '../pages/LoginPage';
 import RegisterPage from '../pages/RegisterPage';
 import ProductDetailPage from '../pages/ProductDetailPage';
+import ProductsPage from '../pages/ProductsPage';
 import AccountLayout from '../layouts/AccountLayout';
 import NotFound from '@/pages/NotFoundPage';
 import ProfilePage from '@/pages/ProfilePage';
@@ -19,6 +20,7 @@ const AppRoute = () => {
                     <Route index element={<HomePage />} />
                     <Route path='cart' element={<CartPage />} />
                     <Route path='products/:id' element={<ProductDetailPage />} />
+                    <Route path='products' element={<ProductsPage />} />
                     <Route path='profile' element={<PrivateRoute><ProfilePage /></PrivateRoute>} />
                 </Route>
                 <Route path='/accounts/' element={<AccountLayout />}>

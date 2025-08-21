@@ -4,7 +4,7 @@ import { FiShoppingCart } from "react-icons/fi";
 
 const CartIcon = () => {
   const { cartCount } = useCart();
-
+  console.log("cartIcon render edildi")
   return (
     <Link to="/cart" className="relative text-zinc-800 dark:text-white">
       <FiShoppingCart 

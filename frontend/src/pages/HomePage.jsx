@@ -3,7 +3,6 @@ import useAxios from "@/hooks/useAxios";
 import HeroBanner from "../components/HeroBanner";
 import CategoryScroller from "@/components/CategoryScroller";
 import ProductCard from "@/components/ProductCard";
-import { useCartInit } from "@/hooks/useCartInit";
 import { SessionStorageManager } from '@/utils/sessionStorageManager';
 import { motion } from "framer-motion"; 
 import { SlArrowLeft } from "react-icons/sl";
@@ -19,7 +18,6 @@ const HomePage = () => {
   const [scrollPositionRestored, setScrollPositionRestored] = useState(false); // Önceki sayfanın scroll değerini sakla
   const [initialLoadDone, setInitialLoadDone] = useState(false);
 
-  useCartInit(); // giriş yapılınca sepeti çek
 
   useEffect(() => {
     const fetchData = async () => {
@@ -99,8 +97,11 @@ const HomePage = () => {
       ) : (
         <>
           <HeroBanner />
+
           <div className="flex justify-center relative my-10 mx-5">
             <div className="flex items-center justify-between container">
+
+              {/* Sol kategori butonu */}
               <div className="group">
                 <button
                   onClick={() => handleScroll("left")}
@@ -112,6 +113,7 @@ const HomePage = () => {
 
               <CategoryScroller categories={categories} scrollRef={scrollRef} />
 
+              {/* Sağ kategori butonu */}
               <div className="group">
                 <button
                   onClick={() => handleScroll("right")}
@@ -120,12 +122,12 @@ const HomePage = () => {
                   <SlArrowRight className="size-7 mt-2"/>
                 </button>
               </div>
+
             </div>
           </div>
 
           <br />
           
-
           <div id="targetDiv" className="flex flex-col">
             <h2 className="flex justify-center text-3xl pt-20">Popüler Ürünler</h2>
             <div className="flex justify-center flex-wrap pt-10 mb-10">
@@ -136,6 +138,7 @@ const HomePage = () => {
               </div>
             </div>
           </div>
+          
         </>
       )}
     </>

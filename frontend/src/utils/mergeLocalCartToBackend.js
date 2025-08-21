@@ -14,6 +14,4 @@ export const mergeLocalCartToBackend = async (axios) => {
   }
 
   localStorage.removeItem("cart");
-  window.dispatchEvent(new Event("cartUpdated"));
 };
-

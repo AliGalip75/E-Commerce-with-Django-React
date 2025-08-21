@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Category, FavoriteProduct, Product, ProductImage
+from .models import Category, FavoriteProduct, Product
 
 
 class ProductInline(admin.StackedInline):
@@ -7,10 +7,11 @@ class ProductInline(admin.StackedInline):
     extra = 3
     fields = ['name', 'price', 'stock', 'description', 'image']  # Gösterilecek alanlar
 
-
+'''
 class ProductImageInline(admin.TabularInline):
     model = ProductImage
     extra = 3
+'''
     
 
 # verilen category'nin altındaki tüm children'ları dön
@@ -60,9 +61,7 @@ class ProductAdmin(admin.ModelAdmin):
     list_filter = ['category', 'created_at']
     search_fields = ['name', 'description']
     ordering = ['-created_at']
-    inlines = [
-        ProductImageInline
-    ]
+    # inlines = [ProductImageInline]
     
 
 admin.site.register(Category, CategoryAdmin)

@@ -2,13 +2,16 @@ from rest_framework import serializers
 from products.models import Product, Category, FavoriteProduct
 
 class CategorySerializer(serializers.ModelSerializer):
-    children = serializers.PrimaryKeyRelatedField(many=True, read_only=True)
-    # __str__ ile ismini de yazsın
-    parent = serializers.StringRelatedField() 
+    children = serializers.SerializerMethodField()
     class Meta:
         model = Category
-        exclude = ["slug"]
+        exclude = ["cached_path"]
         read_only_fields = ["id", "parent"]
+        
+    def get_children(self, obj):
+        # Aktif alt kategorileri getir
+        children = obj.children.filter(is_active=True)
+        return CategorySerializer(children, many=True).data
         
         
 ''' Product Serializer - Write (create, update) '''

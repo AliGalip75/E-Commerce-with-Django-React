@@ -9,12 +9,14 @@ import {
   AlertDescription
 } from "@/components/ui/alert";
 import { useAuth } from '@/hooks/useAuth';
+import { useCart } from '@/hooks/useCart';
 
 const Cart = () => {
     const axios = useAxios();
     const [cartItems, setCartItems] = useState([]);
     const [loading, setLoading] = useState(true);
     const { accessToken } = useAuth();
+    const { cartCount } = useCart();
     
     useEffect(() => {
         const fetchCart = async () => {
@@ -32,10 +34,12 @@ const Cart = () => {
                         })
                     );
                     setCartItems(detailedCart);
+
                 // Kullanıcı giriş yapmışsa kendi sepetini getir
                 } else {
                     const response = await axios.get("cart/");
                     setCartItems(response.data);
+                    console.log(response.data);
                 }
             } catch (error) {
                 console.error("Sepet verisi alınamadı", error);
@@ -44,12 +48,7 @@ const Cart = () => {
             }    
         };
         fetchCart();
-        
-        // Proje genelinden sepet güncelleme fonksiyonuna erişmek için eventListener oluşturduk
-        const handleCartUpdate = () => fetchCart();
-        window.addEventListener("cartUpdated", handleCartUpdate);
-        return () => window.removeEventListener("cartUpdated", handleCartUpdate);
-    }, []); //!
+    }, [cartCount]); 
 
     return (
         <div className="w-full flex justify-center">

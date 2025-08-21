@@ -7,31 +7,25 @@ from ..models import CustomUser
 
 ''' Token + RefreshToken + id + email '''
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
-    # username_field = 'email'
+    username_field = 'email' # Giriş için email kullanılacak
+    
     def validate(self, attrs):
         try:
             # Email ile kullanıcı bulunabilir mi kontrolü
             email = attrs.get('email')
             password = attrs.get('password')
-            
-            if not email or not password:
-                raise AuthenticationFailed({
-                    'detail': 'Email ve şifre zorunludur.'
-                })
 
             # Kullanıcıyı bul
             try:
                 user = CustomUser.objects.get(email=email)
             except CustomUser.DoesNotExist:
                 raise AuthenticationFailed({
-                    'email': ['Geçersiz e-posta veya şifre.'],
-                    'password': ['Geçersiz e-posta veya şifre.']
+                    'email': ['Geçersiz e-posta.']
                 })
 
             if not user.check_password(password):
                 raise AuthenticationFailed({
-                    'email': ['Geçersiz e-posta veya şifre.'],
-                    'password': ['Geçersiz e-posta veya şifre.']
+                    'password': ['Geçersiz şifre.']
                 })
 
             if not user.is_active:
@@ -39,7 +33,12 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
 
             # Kullanıcı doğrulandıysa
             self.user = user  # eklemezsek token oluşturulamaz
-            data = super().validate(attrs)  # gelen veriyi kullan
+            
+            # İstemciden gelen verileri al (örneğin, username ve password)
+            data = super().validate(attrs) 
+            
+            # Yanıta ek veriler ekle
+            data["role"] = self.user.role
             
             return data
         except AuthenticationFailed as e:

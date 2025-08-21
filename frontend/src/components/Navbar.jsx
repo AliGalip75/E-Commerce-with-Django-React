@@ -5,7 +5,6 @@ import CartIcon from "@/components/CartIcon";
 import ThemeToggle from "@/components/ThemeToggle";
 
 const Navbar = () => {
-
   return (
     <div className="container md:mx-auto flex items-center justify-between py-5">
       

@@ -4,11 +4,12 @@ import { useCart } from "@/hooks/useCart";
 import { useAuth } from "@/hooks/useAuth";
 import QuantityDisplay from "@/components/Quantity";
 import toast from "react-hot-toast";
+import { fetchCartCount } from "@/utils/fetchCartCount";
 
 const CartItemCard = ({ item }) => {
   const axios = useAxios();
   const { accessToken } = useAuth();
-  const { updateCartCount, incCartCount, decCartCount } = useCart();
+  const { updateCartCount, incCartCount, decCartCount, cartCount } = useCart();
 
   const updateQuantity = async (newQty, type) => {
     try {
@@ -22,7 +23,8 @@ const CartItemCard = ({ item }) => {
         localStorage.setItem("cart", JSON.stringify(updatedCart));
       }
 
-      window.dispatchEvent(new Event("cartUpdated"));
+      //window.dispatchEvent(new Event("cartUpdated"));
+      
       if (type==="inc") {
         incCartCount();
       } else {
@@ -36,6 +38,7 @@ const CartItemCard = ({ item }) => {
 
   // Access'e göre sepetten veya localden item sil
   const deleteItem = async () => {
+    let newCartCount = 0;
     try {
       if (accessToken) {
         await axios.delete(`cart/${item.id}/`);
@@ -46,9 +49,10 @@ const CartItemCard = ({ item }) => {
         );
         localStorage.setItem("cart", JSON.stringify(updatedCart));
       }
-      updateCartCount();
       toast.success(`${item.product.name} silindi.`);
-      window.dispatchEvent(new Event("cartUpdated"));
+      newCartCount = await fetchCartCount(axios, accessToken);
+      console.log(newCartCount)
+      updateCartCount(newCartCount);
     } catch (error) {
       toast.error("Ürün silinemedi.");
     }

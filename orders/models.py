@@ -57,5 +57,5 @@ class OrderItem(models.Model):
         return self.product.price * self.quantity # Siparişteki her ürünün toplam(price * quantity) fiyatı
     
     def __str__(self):
-        return f"{self.quantity} adet {self.product.name} in Order #{self.order.order_id}"
+        return f"{self.quantity} adet in Order #{self.order.order_id}"
   

@@ -26,7 +26,6 @@ export const useAuth = () => {
       axios.defaults.headers.common["Authorization"] = `Bearer ${data.access}`;
       
       await mergeLocalCartToBackend(axios);
-      window.dispatchEvent(new Event("cartUpdated"));
       
       if (redirectCallback) redirectCallback();
       
