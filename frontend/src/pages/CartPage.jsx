@@ -19,6 +19,7 @@ const Cart = () => {
     const { cartCount } = useCart();
     
     useEffect(() => {
+        window.scrollTo(0, 0);
         const fetchCart = async () => {
             try {
                 // Kullanıcı giriş yapmamışsa sepeti lokalden çek

@@ -12,7 +12,7 @@ from products.api.filters import ProductSearchFilter
 from products.api.pagination import StandardResultsSetPagination
 
 class ProductViewSet(viewsets.ModelViewSet):
-    queryset = Product.objects.all()
+    queryset = Product.objects.order_by("pk")
     filter_backends = [DjangoFilterBackend, ProductSearchFilter, filters.OrderingFilter]
     filterset_class = ProductFilter
     pagination_class = StandardResultsSetPagination

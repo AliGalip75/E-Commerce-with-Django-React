@@ -3,9 +3,13 @@ from orders.models import Order
 from .serializers import OrderSerializer
 from cart.models import CartItem
 from django.db import transaction
+from rest_framework import filters
 
 class OrderViewSet(viewsets.ModelViewSet):
     serializer_class = OrderSerializer
+    filter_backends = [filters.OrderingFilter]
+    ordering_fields = ["created_at"]
+    ordering = ["-created_at"]
 
     def get_queryset(self):
         return Order.objects.filter(user=self.request.user)

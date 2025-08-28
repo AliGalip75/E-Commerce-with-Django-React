@@ -49,9 +49,7 @@ const AuthForm = () => {
             type: "server",
             message: errors.non_field_errors[0]
           });
-        }
-
-        
+        }   
       } else {
         toast.error("Bilinmeyen bir hata oluştu.");
       }
@@ -95,9 +93,19 @@ const AuthForm = () => {
           )}
         />
         
-        <Button type="submit" className="w-full cursor-pointer bg-zinc-950 dark:bg-white hover:bg-zinc-900" disabled={isSubmitting}>
-          {isSubmitting ? "Giriş Yapılıyor..." : "Giriş Yap"}
+        <Button
+          type="submit"
+          className="w-full relative cursor-pointer bg-zinc-950 dark:bg-white hover:bg-zinc-900 disabled:bg-zinc-800 disabled:cursor-not-allowed"
+          disabled={isSubmitting}>
+          {isSubmitting ? (
+            <div className="flex items-center justify-center w-full">
+              <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+            </div>
+          ) : (
+            "Giriş Yap"
+          )}
         </Button>
+
         <div className="flex justify-center">
           <Link to="/accounts/register" className="font-light">Hesabın yok mu? <strong>Kayıt Ol.</strong></Link>
         </div>

@@ -140,9 +140,11 @@ REST_FRAMEWORK = {
 AUTH_USER_MODEL = 'accounts.CustomUser'
 
 SIMPLE_JWT = {
-    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=10),
+    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=5),
     "REFRESH_TOKEN_LIFETIME": timedelta(days=7),
     "BLACKLIST_AFTER_ROTATION": True,
+    'AUTH_COOKIE': 'refresh_token',  # Refresh token’ın saklanacağı cookie adı
+    'AUTH_COOKIE_HTTP_ONLY': True,   # Güvenlik için httpOnly cookie
     "AUTH_HEADER_TYPES": ("Bearer",),
     "AUTH_TOKEN_CLASSES": ("rest_framework_simplejwt.tokens.AccessToken",),
 }
@@ -150,6 +152,12 @@ SIMPLE_JWT = {
 # CORS_ALLOWED_ORIGINS
 
 CORS_ALLOW_ALL_ORIGINS = True
+
+CORS_ALLOW_CREDENTIALS = True
+
+# Preflight için gerekli
+CORS_ALLOW_METHODS = ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS']
+CORS_ALLOW_HEADERS = ['content-type', 'authorization']
 
 APPEND_SLASH = False
 
@@ -159,6 +167,3 @@ SPECTACULAR_SETTINGS = {
     'VERSION': '1.0.0',
     'SERVE_INCLUDE_SCHEMA': False, # Schema'yı ayrı bir endpoint'te sunmak için True yapın
 }
-
-
-CORS_ALLOW_CREDENTIALS = True

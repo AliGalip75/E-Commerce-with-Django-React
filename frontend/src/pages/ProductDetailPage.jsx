@@ -3,7 +3,6 @@ import { useEffect, useState } from "react";
 import useAxios from "@/hooks/useAxios";
 import { motion } from "framer-motion"; 
 
-
 const ProductDetail = () => {
   const { id } = useParams();
   const [product, setProduct] = useState(null);
@@ -13,7 +12,9 @@ const ProductDetail = () => {
   useEffect(() => {
     const fetchProduct = async () => {
       try {
+        setLoading(true);
         const response = await axios.get(`products/${id}/`);
+        console.log(response.data)
         setProduct(response.data);
       } catch (error) {
         console.error("Ürün çekilemedi.", error);

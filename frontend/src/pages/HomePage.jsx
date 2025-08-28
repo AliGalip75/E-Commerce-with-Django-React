@@ -13,13 +13,14 @@ const HomePage = () => {
   const [categories, setCategories] = useState([]);
   const axios = useAxios();
   const [products, setProducts] = useState([]);
-  const { loading, setLoading, isReady }  = useAuth();
+  const { loading, setLoading, isReady, accessToken }  = useAuth();
   const scrollRef = useRef(null);
   const [scrollPositionRestored, setScrollPositionRestored] = useState(false); // Önceki sayfanın scroll değerini sakla
   const [initialLoadDone, setInitialLoadDone] = useState(false);
 
 
   useEffect(() => {
+    window.scrollTo(0, 0);
     const fetchData = async () => {
       try {
         // Refresh işlemi ile token yenileme bitmeden veri çekmeye çalışmasın diye
@@ -45,7 +46,7 @@ const HomePage = () => {
       fetchData();
       setInitialLoadDone(true);
     }
-  }, [isReady, initialLoadDone]);
+  }, [isReady, initialLoadDone, accessToken]);
 
   useLayoutEffect(() => {
     if (!loading && products.length && !scrollPositionRestored) {
