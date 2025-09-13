@@ -9,7 +9,7 @@ import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import { SessionStorageManager } from "@/utils/sessionStorageManager";
 import FavoriteButton from "./FavoriteButton";
-
+import GlareHover from '@/components/GlareHover';
 
 const MotionCard = motion.create(Card);
  
@@ -60,16 +60,25 @@ const ProductCard = ({ product }) => {
       initial={{ opacity: 0, y: 20 }}
       whileInView={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4 }}
-      whileHover={{ scale: 1.01 }}
+      whileHover={{ scale: 1.03 }}
       viewport={{ once: true }}
-      className="relative w-full max-w-sm rounded-2xl shadow-md bg-white hover:shadow-lg dark:bg-zinc-900 max-h-[500px] cursor-pointer"
+      className="relative w-full max-w-sm shadow-md bg-white hover:shadow-lg dark:bg-zinc-900 max-h-[500px] cursor-pointer overflow-hidden"
     >
       {/* Ürün resmi */}
-      <img
-        src={product.image}
-        alt={product.name}
-        className="w-full h-50 object-cover"
-      />
+      <GlareHover
+        glareColor="#ffffff"
+        glareOpacity={0.4}
+        glareAngle={-30}
+        glareSize={225}
+        transitionDuration={800}
+        playOnce={true}
+      >
+        <img
+          src={product.image}
+          alt={product.name}
+          className="w-full h-50 object-cover"
+        />
+      </GlareHover>
       <FavoriteButton productId={product.id} isFavorited={isFavorited} setIsFavorited={setIsFavorited}/>
 
       <CardContent className="p-4 space-y-1">

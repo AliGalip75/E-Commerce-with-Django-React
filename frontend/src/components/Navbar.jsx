@@ -24,15 +24,6 @@ const Navbar = () => {
 
       {/* Arama ve ikonlar */}
       <div className="flex me-10 md:mx-0 items-center gap-4">
-        {/* Arama kutusu */}
-        <div className="hidden md:block">
-          <Input
-            type="text"
-            placeholder="Lorem ipsum"
-            className="w-64 bg-zinc-100 text-zinc-900 dark:text-white border-1 border-zinc-500 select-none"
-          />
-        </div>
-
         {/* Profil ve Sepet */}
         <ThemeToggle />
         <ProfileMenu />

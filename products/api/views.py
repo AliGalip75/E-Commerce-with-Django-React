@@ -63,7 +63,8 @@ class ProductViewSet(viewsets.ModelViewSet):
         user = request.user
         
         favorite_item = FavoriteProduct.objects.filter(user=user, product=product)
-        
+        if not user:
+            return Response({"status" : "Favorilemek için giriş yapiniz"})
         if favorite_item:
             favorite_item.delete()
             return Response({"status": "Ürün favorilerden çikartildi"}, status=status.HTTP_200_OK)

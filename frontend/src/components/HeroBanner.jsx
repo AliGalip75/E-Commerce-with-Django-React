@@ -3,6 +3,7 @@ import { splitText } from "motion-plus"
 import { useEffect, useRef } from "react"
 import { Button } from "./ui/button";
 import { useState } from "react";
+import RotatingText from '@/components/RotatingText'
 
 const HeroBanner = () => {
   const containerRef = useRef(null);
@@ -45,11 +46,11 @@ const HeroBanner = () => {
   }, [])
 
   return (
-    <section className="relative h-[600px] w-full overflow-hidden">
+    <section className="relative h-[680px] w-full overflow-hidden">
 
       {/* Arka plan resmi */}
       <img
-        src="src/assets/kaisa2.jpg"
+        src="src/assets/laptop_12.jpg"
         alt="Hero"
         className={`w-full h-full object-cover select-none transition-opacity duration-700 ${
           loaded ? "opacity-100" : "opacity-0"
@@ -67,9 +68,18 @@ const HeroBanner = () => {
             Morbi mattis lectus blandit augue scelerisque, a fermentum elit
             blandit.
           </p>
-          <Button className="bg-white text-gray-900 hover:bg-gray-100 w-40 h-10 text-base">
-            Keşfet
-          </Button>
+          <RotatingText
+            texts={['Hızlı', 'Güvenli', 'Hesaplı']}
+            mainClassName="px-2 sm:px-2 md:px-3 bg-zinc-50 text-zinc-600 text-xl font-sans overflow-hidden py-0.5 sm:py-1 md:py-2 justify-center rounded-lg"
+            staggerFrom={"last"}
+            initial={{ y: "100%" }}
+            animate={{ y: 0 }}
+            exit={{ y: "-120%" }}
+            staggerDuration={0.025}
+            splitLevelClassName="overflow-hidden pb-0.5 sm:pb-1 md:pb-1"
+            transition={{ type: "spring", damping: 35, stiffness: 300 }}
+            rotationInterval={2000}
+          />
         </div>
       )}
     </section>

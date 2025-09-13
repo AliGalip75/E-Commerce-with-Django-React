@@ -6,24 +6,28 @@ const FavoriteButton = ({ productId, isFavorited, setIsFavorited }) => {
     const axios = useAxios();
 
     const handleToggleFavorite = async (e) => {
-        e.stopPropagation();
-        try {
-
-            if (isFavorited) {
-                // Favorilerden çıkarma işlemi
-                await axios.post(`/products/${productId}/favorite/`);
-                setIsFavorited(false);
-                toast.success("Ürün favorilerden çıkarıldı!");
-            } else {
-                // Favorilere ekleme işlemi
-                await axios.post(`/products/${productId}/favorite/`);
-                setIsFavorited(true);
-                toast.success("Ürün favorilere eklendi!");
-            }
-        } catch (err) {
-            console.error("Favori işlemi başarısız:", err);
-            toast.error("Favori işlemi sırasında bir hata oluştu.");
+      e.stopPropagation();
+      try {
+        if (isFavorited) {
+            // Favorilerden çıkarma işlemi
+            await axios.post(`/products/${productId}/favorite/`);
+            setIsFavorited(false);
+            toast.success("Ürün favorilerden çıkarıldı!");
+        } else {
+            // Favorilere ekleme işlemi
+            await axios.post(`/products/${productId}/favorite/`);
+            setIsFavorited(true);
+            toast.success("Ürün favorilere eklendi!");
         }
+      } catch (err) {
+        console.error("Favori işlemi başarısız:", err);
+        if (err.response?.status === 401) {
+          // Kullanıcı giriş yapmamışsa
+          toast.error("Favorilere eklemek için giriş yapmalısınız!");
+        } else {
+          toast.error("Favori işlemi sırasında bir hata oluştu.");
+        }
+      }
     };
 
   return (

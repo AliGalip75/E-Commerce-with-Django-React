@@ -1,58 +1,81 @@
 import { useState, useEffect } from "react";
 import { useLocation, useSearchParams, useNavigate } from "react-router-dom";
+import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
-import { 
-  ChevronDownIcon, 
+import {
+  ChevronDownIcon,
   ChevronRightIcon,
   FilterIcon,
   SearchIcon,
   Grid3X3Icon,
-  ListIcon
+  ListIcon,
+  HomeIcon,
+  FolderOpenIcon,
 } from "lucide-react";
-import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
+import { Collapsible, CollapsibleContent } from "@/components/ui/collapsible";
 import ProductCard from "@/components/ProductCard";
+import { ProductService } from "@/services/ProductService";
+import useAxios from "@/hooks/useAxios";
 
-const ProductsPage = () => {
+const ProductsPage = ({}) => {
+  const axios = useAxios();
   const { state } = useLocation();
-  const [searchParams, setSearchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams({});
   const navigate = useNavigate();
-  const [viewMode, setViewMode] = useState('grid');
-  const [searchTerm, setSearchTerm] = useState('');
+  const [viewMode, setViewMode] = useState("grid");
+  const [searchTerm, setSearchTerm] = useState("");
+  const [loading, setLoading] = useState(true);
   const [expandedCategories, setExpandedCategories] = useState(new Set());
-  
+
   // URL'den kategori ID'sini al
-  const currentCategoryId = searchParams.get('category');
-  
-  // State'den kategorileri al, eğer yoksa localStorage'dan veya API'den çek
-  const [categories, setCategories] = useState(state?.categories || []);
-  
+  const currentCategoryId = searchParams.get("category");
+
+  // Başlangıçta kategori ID'yi belirle (öncelik state.id'de)
+  const initialCategoryId = state?.id || currentCategoryId;
+
+  const [categories, setCategories] = useState([]);
+
   // Seçili kategori bilgisini URL'den al
-  const selectedCategory = currentCategoryId ? parseInt(currentCategoryId) : null;
-  
-  // Kategorileri localStorage'dan yükle (eğer state'de yoksa)
+  const [selectedCategory, setSelectedCategory] = useState(
+    initialCategoryId ? parseInt(initialCategoryId) : null
+  );
+
+  // Kategorileri localStorage'dan yükle
   useEffect(() => {
-    if (state?.categories) {
-      setCategories(state.categories);
-      // localStorage'a kaydet
-      localStorage.setItem('categories', JSON.stringify(state.categories));
-    } else {
-      // localStorage'dan yükle
-      const savedCategories = localStorage.getItem('categories');
-      if (savedCategories) {
-        setCategories(JSON.parse(savedCategories));
+    window.scrollTo(0, 0);
+
+    handleCategorySelect(initialCategoryId);
+    const fetchCategories = async () => {
+      try {
+        setLoading(true);
+        const data = await ProductService.getCategories(axios);
+        if (data) {
+          setCategories(data);
+          console.log("Kategoriler yüklendi:", data);
+        } else {
+          console.warn("Kategori verisi boş geldi");
+        }
+      } catch (error) {
+        console.error("Kategori çekilemedi:", error);
+      } finally {
+        setLoading(false);
       }
-    }
-  }, [state]);
+    };
+
+    fetchCategories();
+  }, [axios]);
+
 
   // Kategori seçildiğinde URL'i güncelle
   const handleCategorySelect = (categoryId) => {
     if (categoryId) {
       setSearchParams({ category: categoryId });
+      setSelectedCategory(categoryId);
     } else {
       setSearchParams({});
+      setSelectedCategory(null);
     }
   };
 
@@ -67,67 +90,61 @@ const ProductsPage = () => {
     setExpandedCategories(newExpanded);
   };
 
-  // Seçili kategorinin adını bul
-  const getSelectedCategoryName = () => {
-    if (!selectedCategory) return null;
-    
-    // Tüm kategorilerde recursive arama yap
-    const findCategory = (categoryList, targetId) => {
-      for (const category of categoryList) {
-        if (category.id === targetId) {
-          return category.name;
-        }
-        if (category.children && category.children.length > 0) {
-          const found = findCategory(category.children, targetId);
-          if (found) return found;
-        }
+  // Seçili kategorinin breadcrumb yolunu bul
+  const getCategoryPath = (categoryList, targetId, path = []) => {
+    for (const category of categoryList) {
+      const newPath = [...path, category];
+
+      // ID'leri aynı tipe getir
+      if (category.id === Number(targetId)) {
+        return newPath;
       }
-      return null;
-    };
-    
-    return findCategory(categories, selectedCategory);
+
+      if (Array.isArray(category.children) && category.children.length > 0) {
+        const found = getCategoryPath(category.children, targetId, newPath);
+        if (found.length > 0) return found;
+      }
+    }
+
+    return [];
   };
 
-  const selectedCategoryName = getSelectedCategoryName();
+
+  const selectedCategoryPath = selectedCategory
+    ? getCategoryPath(categories, selectedCategory)
+    : [];
 
   // Nested kategori render fonksiyonu
   const renderCategoryTree = (categoryList, level = 0) => {
-    return categoryList.map(category => {
+    return categoryList.map((category) => {
       const hasChildren = category.children && category.children.length > 0;
       const isExpanded = expandedCategories.has(category.id);
       const isSelected = selectedCategory === category.id;
-      
+
       return (
         <div key={category.id} className="w-full">
-          <div className="flex items-center justify-between group">
-            <button
-              onClick={() => handleCategorySelect(category.id)}
-              className={`flex-1 text-left px-3 py-2 rounded-md transition-all duration-200 hover:bg-accent hover:text-accent-foreground ${
-                isSelected 
-                  ? 'bg-primary text-primary-foreground font-medium' 
-                  : 'text-foreground'
-              } ${level > 0 ? 'ml-4' : ''}`}
-            >
-              <span className="text-sm">{category.name}</span>
-            </button>
-            
-            {hasChildren && (
-              <Button
-                variant="ghost"
-                size="sm"
-                className="h-6 w-6 p-0 opacity-0 group-hover:opacity-100 transition-opacity"
-                onClick={() => toggleCategory(category.id)}
-              >
-                {isExpanded ? (
-                  <ChevronDownIcon className="h-4 w-4" />
-                ) : (
-                  <ChevronRightIcon className="h-4 w-4" />
-                )}
-              </Button>
-            )}
-          </div>
-          
-          {hasChildren && (
+          <button
+            onClick={() => {
+              handleCategorySelect(category.id);
+              if (hasChildren) toggleCategory(category.id);
+            }}
+            className={`flex items-center justify-between w-[85%] px-3 py-2 rounded-md  ${
+              isSelected
+                ? "bg-primary text-primary-foreground font-semibold border-l-4 border-primary pl-2"
+                : "text-foreground hover:bg-accent hover:text-accent-foreground"
+            }`}
+            style={{ marginLeft: `${level * 16}px` }}
+          >
+            <span className="text-sm">{category.name}</span>
+            {hasChildren &&
+              (isExpanded ? (
+                <ChevronDownIcon className="h-4 w-4" />
+              ) : (
+                <ChevronRightIcon className="h-4 w-4" />
+              ))}
+          </button>
+
+          {hasChildren && isExpanded && (
             <Collapsible open={isExpanded}>
               <CollapsibleContent className="mt-1">
                 {renderCategoryTree(category.children, level + 1)}
@@ -140,120 +157,174 @@ const ProductsPage = () => {
   };
 
   // Filtrelenmiş kategoriler (sadece parent olmayanlar)
-  const parentCategories = categories.filter(cat => cat.parent === null);
+  const parentCategories = categories.filter((cat) => cat.parent === null);
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen">
       <div className="container mx-auto px-4 py-8">
-        {/* Header */}
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-foreground mb-2">
-            Ürünler
-          </h1>
-          <p className="text-muted-foreground">
-            {selectedCategoryName 
-              ? `"${selectedCategoryName}" kategorisindeki ürünler`
-              : 'Tüm ürünleri keşfedin'
-            }
-          </p>
-        </div>
-
-        <div className="flex flex-col lg:flex-row gap-8">
-          {/* Sol Sidebar - Kategori Filtreleri */}
-          <div className="lg:w-80 flex-shrink-0">
-            <div className="sticky top-8">
-              <div className="bg-card border rounded-lg p-6">
-                <div className="flex items-center gap-2 mb-4">
-                  <FilterIcon className="h-5 w-5 text-primary" />
-                  <h3 className="font-semibold text-lg">Kategoriler</h3>
-                </div>
-                
-                <Separator className="mb-4" />
-                
-                {/* Tüm Kategoriler Butonu */}
-                <button
-                  onClick={() => handleCategorySelect(null)}
-                  className={`w-full text-left px-3 py-2 rounded-md transition-all duration-200 hover:bg-accent hover:text-accent-foreground mb-3 ${
-                    !selectedCategory 
-                      ? 'bg-primary text-primary-foreground font-medium' 
-                      : 'text-foreground'
-                  }`}
+        {loading ? (
+          <div className="flex justify-center min-h-screen items-center py-10">
+              <motion.div
+                  className="w-12 h-12 border-4 border-gray-300 border-t-zinc-950 rounded-full"
+                  animate={{ rotate: 360 }}
+                  transition={{
+                      duration: 1,
+                      repeat: Infinity,
+                      ease: "linear"
+                  }}
+              />
+          </div>
+        ) : (
+          <>
+              {/* Breadcrumb */}
+              <div className="flex items-center text-sm text-muted-foreground mb-6">
+                <HomeIcon className="h-4 w-4 mr-1" />
+                <span
+                  className="cursor-pointer hover:underline"
+                  onClick={() => navigate("/")}
                 >
-                  <span className="text-sm font-medium">Tüm Kategoriler</span>
-                </button>
-                
-                <Separator className="mb-4" />
-                
-                {/* Kategori Ağacı */}
-                <div className="space-y-1">
-                  {renderCategoryTree(parentCategories)}
-                </div>
-              </div>
-            </div>
-          </div>
+                  Ana Sayfa
+                </span>
 
-          {/* Sağ Taraf - Ürünler */}
-          <div className="flex-1">
-            {/* Üst Araç Çubuğu */}
-            <div className="bg-card border rounded-lg p-4 mb-6">
-              <div className="flex flex-col sm:flex-row gap-4 items-center justify-between">
-                {/* Arama */}
-                <div className="relative flex-1 max-w-md">
-                  <SearchIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                  <Input
-                    placeholder="Ürün ara..."
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                    className="pl-10"
-                  />
-                </div>
-                
-                {/* Görünüm Modu */}
-                <div className="flex items-center gap-2">
-                  <Button
-                    variant={viewMode === 'grid' ? 'default' : 'outline'}
-                    size="sm"
-                    onClick={() => setViewMode('grid')}
-                  >
-                    <Grid3X3Icon className="h-4 w-4" />
-                  </Button>
-                  <Button
-                    variant={viewMode === 'list' ? 'default' : 'outline'}
-                    size="sm"
-                    onClick={() => setViewMode('list')}
-                  >
-                    <ListIcon className="h-4 w-4" />
-                  </Button>
-                </div>
+                {selectedCategoryPath &&
+                  selectedCategoryPath.map((cat, index) => (
+                    <div key={cat.id} className="flex items-center">
+                      <ChevronRightIcon className="h-4 w-4 mx-2" />
+                      <span
+                        className={`cursor-pointer hover:underline ${
+                          index === selectedCategoryPath.length - 1
+                            ? "text-foreground font-medium flex items-center gap-1"
+                            : ""
+                        }`}
+                        onClick={() => handleCategorySelect(cat.id)}
+                      >
+                        <FolderOpenIcon className="h-4 w-4 inline mr-1" />
+                        {cat.name}
+                      </span>
+                    </div>
+                  ))}
               </div>
-            </div>
 
-            {/* Ürün Listesi */}
-            <div className="space-y-6">
-              {selectedCategory ? (
-                <div>
-                  <div className="flex items-center gap-2 mb-4">
-                    <Badge variant="secondary">
-                      {selectedCategoryName || 'Bilinmeyen Kategori'}
-                    </Badge>
-                    <span className="text-sm text-muted-foreground">
-                      kategorisinde ürün bulunamadı
-                    </span>
+              {/* Header */}
+              <div className="mb-8">
+                <h1 className="text-3xl font-bold text-foreground mb-2">
+                  {selectedCategoryPath.length > 0
+                    ? selectedCategoryPath[selectedCategoryPath.length - 1].name
+                    : "Tüm Ürünler"}
+                </h1>
+                <p className="text-muted-foreground">
+                  {selectedCategoryPath.length > 0
+                    ? `"${selectedCategoryPath[selectedCategoryPath.length - 1].name}" kategorisindeki ürünler`
+                    : "Tüm ürünleri keşfedin"}
+                </p>
+              </div>
+
+              <div className="flex flex-col lg:flex-row gap-8">
+                {/* Sol Sidebar - Kategori Filtreleri */}
+                <div className="lg:w-80 flex-shrink-0">
+                  <div className="sticky top-8">
+                    <div className="bg-card border rounded-lg p-6">
+                      <div className="flex items-center gap-2 mb-4">
+                        <FilterIcon className="h-5 w-5 text-primary" />
+                        <h3 className="font-semibold text-lg">Kategoriler</h3>
+                      </div>
+
+                      <Separator className="mb-4" />
+
+                      {/* Tüm Kategoriler Butonu */}
+                      <button
+                        onClick={() => handleCategorySelect(null)}
+                        className={`w-full text-left px-3 py-2 rounded-md transition-all duration-200 mb-3 ${
+                          !selectedCategory
+                            ? "bg-primary text-primary-foreground font-semibold border-l-4 border-primary pl-2"
+                            : "text-foreground hover:bg-accent hover:text-accent-foreground"
+                        }`}
+                      >
+                        <span className="text-sm font-medium">Tüm Kategoriler</span>
+                      </button>
+
+                      <Separator className="mb-4" />
+
+                      {/* Kategori Ağacı */}
+                      <div className="space-y-1">
+                        {renderCategoryTree(parentCategories)}
+                      </div>
+                    </div>
                   </div>
-                  <p className="text-center text-muted-foreground py-12">
-                    Bu kategoride henüz ürün bulunmuyor.
-                  </p>
                 </div>
-              ) : (
-                <div className="text-center text-muted-foreground py-12">
-                  <p>Lütfen bir kategori seçin veya tüm ürünleri görüntüleyin.</p>
+
+                {/* Sağ Taraf - Ürünler */}
+                <div className="flex-1">
+                  {/* Üst Araç Çubuğu */}
+                  <div className="bg-card border rounded-lg p-4 mb-6">
+                    <div className="flex flex-col sm:flex-row gap-4 items-center justify-between">
+                      {/* Arama */}
+                      <div className="relative flex-1 max-w-md">
+                        <SearchIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                        <Input
+                          placeholder="Ürün ara..."
+                          value={searchTerm}
+                          onChange={(e) => setSearchTerm(e.target.value)}
+                          className="pl-10"
+                        />
+                      </div>
+
+                      {/* Görünüm Modu */}
+                      <div className="flex items-center gap-2">
+                        <Button
+                          variant={viewMode === "grid" ? "default" : "outline"}
+                          size="sm"
+                          onClick={() => setViewMode("grid")}
+                        >
+                          <Grid3X3Icon className="h-4 w-4" />
+                        </Button>
+                        <Button
+                          variant={viewMode === "list" ? "default" : "outline"}
+                          size="sm"
+                          onClick={() => setViewMode("list")}
+                        >
+                          <ListIcon className="h-4 w-4" />
+                        </Button>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Ürün Listesi */}
+                  <div className="space-y-6">
+                    {selectedCategory ? (
+                      <div>
+                        {/* Eğer ürün yoksa */}
+                        <div className="flex flex-col items-center justify-center py-12 border rounded-lg bg-muted/20">
+                          <FolderOpenIcon className="h-12 w-12 text-muted-foreground mb-4" />
+                          {selectedCategoryPath && selectedCategoryPath.length > 0 ? (
+                            <h3 className="text-lg font-semibold mb-2">
+                              {selectedCategoryPath[selectedCategoryPath.length - 1].name} kategorisinde ürün bulunamadı
+                            </h3>
+                          ) : (
+                            <h3 className="text-lg font-semibold mb-2">
+                              Seçili kategori bulunamadı
+                            </h3>
+                          )}
+                          <p className="text-sm text-muted-foreground mb-4">
+                            Bu kategoride henüz ürün bulunmuyor.
+                          </p>
+                          <Button onClick={() => handleCategorySelect(null)}>
+                            Tüm ürünlere dön
+                          </Button>
+                        </div>
+                      </div>
+                    ) : (
+                      <div className="text-center text-muted-foreground py-12">
+                        <p>Başlamak için bir kategori seçin veya tüm ürünleri görüntüleyin.</p>
+                      </div>
+                    )}
                 </div>
-              )}
+              </div>
             </div>
-          </div>
-        </div>
+          </>
+        )}
       </div>
-    </div>
+    </div> 
   );
 };
 

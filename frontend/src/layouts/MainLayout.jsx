@@ -7,7 +7,7 @@ import Footer from '@/components/Footer';
 const MainLayout = () => {
 
   return (
-    <div className="flex flex-col min-h-screen bg-gray-100 dark:bg-zinc-900 text-gray-900 dark:text-white">
+    <div className="flex flex-col min-h-screen bg-zinc-50 dark:bg-zinc-950 text-gray-900 dark:text-white">
 
       {/* Header */}
       <SiteHeader>

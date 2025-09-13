@@ -52,7 +52,7 @@ const Cart = () => {
     }, [cartCount]); 
 
     return (
-        <div className="w-full flex justify-center">
+        <div className="w-full flex justify-center mb-6">
             <div className="container mx-5 mt-10">
                 <div className="flex md:flex-row justify-center flex-col gap-5">
                     <div className="md:w-[75%] w-[100%]">
@@ -90,7 +90,7 @@ const Cart = () => {
                             </ul>
                         )}
                     </div>
-                    <div className="md:w-[40%] w-[100%]">
+                    <div className="md:w-[40%] w-[100%] md:mt-11">
                         <div className="w-full md:h-full h-[250px]">
                             <OrderSummaryCard items={cartItems} />
                         </div>

@@ -17,7 +17,6 @@ export const CartProvider = ({ children }) => {
         const res = await axios.get("cart/");
         setCartItems(res.data);
         setCartCount(res.data.reduce((sum, i) => sum + i.quantity, cartCount));
-        console.log(cartCount)
       } else {
         const localCart = JSON.parse(localStorage.getItem("cart")) || [];
         setCartItems(localCart);

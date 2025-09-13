@@ -5,7 +5,7 @@ import SiteFooter from './sections/SiteFooter';
 const AccountLayout = () => {
 
     return (
-        <div className="flex flex-col h-screen bg-gray-100 dark:bg-zinc-900 dark:text-white">
+        <div className="flex flex-col h-screen bg-zinc-50 dark:bg-zinc-900 dark:text-white">
             <div className="basis-9/10 ">
                 <div className="w-full h-full">
                     <Outlet />

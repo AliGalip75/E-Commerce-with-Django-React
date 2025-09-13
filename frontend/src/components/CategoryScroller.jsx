@@ -5,7 +5,7 @@ const CategoryScroller = ({ categories, scrollRef }) => {
   const navigate = useNavigate();
 
   const handleCategoryClick = (cat_id) => {
-    navigate("/products", { state : { id: cat_id, categories: categories }});
+    navigate("/products", { state : { id: cat_id }});
   }
 
   return (

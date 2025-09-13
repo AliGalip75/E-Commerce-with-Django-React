@@ -8,6 +8,12 @@ import { motion } from "framer-motion";
 import { SlArrowLeft } from "react-icons/sl";
 import { SlArrowRight } from "react-icons/sl";
 import { useAuth } from '@/hooks/useAuth';
+import ShinyText from '@/components/ShinyText';
+import LogoLoop from '@/components/LogoLoop';
+import { SiReact, SiTailwindcss } from 'react-icons/si';
+import { BiLogoDjango } from "react-icons/bi";
+import { FaJs } from "react-icons/fa";
+import { SiShadcnui } from "react-icons/si";
 
 const HomePage = () => {
   const [categories, setCategories] = useState([]);
@@ -18,6 +24,13 @@ const HomePage = () => {
   const [scrollPositionRestored, setScrollPositionRestored] = useState(false); // Önceki sayfanın scroll değerini sakla
   const [initialLoadDone, setInitialLoadDone] = useState(false);
 
+  const techLogos = [
+    { node: <SiReact />, title: "React", href: "https://react.dev" },
+    { node: <SiTailwindcss />, title: "Tailwind CSS", href: "https://tailwindcss.com" },
+    { node: <BiLogoDjango />, title: "Django", href:"https://www.djangoproject.com/"},
+    { node: <FaJs />, title: "Javascript", href:"https://developer.mozilla.org/en-US/docs/Web/JavaScript"},
+    { node: <SiShadcnui />, title: "Shadcn", href:"https://ui.shadcn.com/"},
+  ];
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -99,7 +112,24 @@ const HomePage = () => {
         <>
           <HeroBanner />
 
-          <div className="flex justify-center relative my-10 mx-5">
+          <br />
+
+          <div className="my-10" style={{ height: '200px', position: 'relative', overflow: 'hidden'}}>
+            <LogoLoop
+              logos={techLogos}
+              speed={100}
+              direction="right"
+              logoHeight={50}
+              gap={100}
+              pauseOnHover
+              scaleOnHover
+              fadeOut
+              fadeOutColor="#030712"
+              ariaLabel="Technology partners"
+            />
+          </div>
+
+          <div className="flex justify-center relative mx-5">
             <div className="flex items-center justify-between container">
 
               {/* Sol kategori butonu */}
@@ -130,7 +160,15 @@ const HomePage = () => {
           <br />
           
           <div id="targetDiv" className="flex flex-col">
-            <h2 className="flex justify-center text-3xl pt-20">Popüler Ürünler</h2>
+            <div class="flex justify-center">
+              <ShinyText
+                text="Popüler Ürünler"
+                speed={3}
+                disabled={false}
+                className="text-3xl"
+              />
+            </div> 
+            
             <div className="flex justify-center flex-wrap pt-10 mb-10">
               <div className="container flex justify-center flex-wrap gap-10">
                 {products.map((product) => (
