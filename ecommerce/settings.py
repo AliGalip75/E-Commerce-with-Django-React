@@ -74,13 +74,20 @@ WSGI_APPLICATION = 'ecommerce.wsgi.application'
 
 
 # Database
-
-''' PostgreSQL Yapilandirma '''
+'''
 DATABASES = {
     'default': dj_database_url.config(
         default='postgres://postgres:12345@localhost:5432/EcommerceDB',
         conn_max_age=600,
         ssl_require=False
+    )
+}
+
+'''
+
+DATABASES = {
+    "default": dj_database_url.config(
+        default=os.environ.get("DATABASE_URL")  # Render otomatik ekler
     )
 }
 
