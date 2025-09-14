@@ -13,7 +13,7 @@ import {
 } from "@/components/ui/form";
 import { useNavigate, Link } from "react-router-dom";
 import { toast } from "react-hot-toast";
-import { AuthService } from "@/services/authService";
+import { AuthService } from "@/services/AuthService";
 import useAxios from "@/hooks/useAxios";
 
 const RegisterForm = () => {
