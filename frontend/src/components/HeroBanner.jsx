@@ -1,7 +1,6 @@
 import { animate, stagger } from "motion"
 import { splitText } from "motion-plus"
 import { useEffect, useRef } from "react"
-import { Button } from "./ui/button";
 import { useState } from "react";
 import RotatingText from '@/components/RotatingText'
 

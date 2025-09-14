@@ -9,8 +9,6 @@ import {
   ChevronRightIcon,
   FilterIcon,
   SearchIcon,
-  Grid3X3Icon,
-  ListIcon,
   HomeIcon,
   FolderOpenIcon,
 } from "lucide-react";

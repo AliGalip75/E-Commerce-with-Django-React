@@ -1,6 +1,6 @@
 import { Outlet } from 'react-router-dom';
 import Footer from '@/components/Footer';
-import SiteFooter from './sections/SiteFooter';
+import SiteFooter from '@/layouts/sections/SiteFooter';
 
 const AccountLayout = () => {
 

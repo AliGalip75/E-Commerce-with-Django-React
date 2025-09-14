@@ -1,8 +1,3 @@
-import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem } from '@/components/ui/dropdown-menu';
-import { Button } from '@/components/ui/button';
-import { useState } from 'react';
-import CollapsibleItem from '../products/common/CollapsibleItem';
-import { CircleCheckIcon, CircleHelpIcon, CircleIcon } from "lucide-react"
 import {
   NavigationMenu,
   NavigationMenuContent,
@@ -10,7 +5,6 @@ import {
   NavigationMenuLink,
   NavigationMenuList,
   NavigationMenuTrigger,
-  navigationMenuTriggerStyle,
 } from "@/components/ui/navigation-menu";
 import { Link } from "react-router-dom";
 

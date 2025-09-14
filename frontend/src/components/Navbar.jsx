@@ -1,5 +1,4 @@
 import { Link } from "react-router-dom";
-import { Input } from "@/components/ui/input";
 import ProfileMenu from "@/components/ProfileMenu";
 import CartIcon from "@/components/CartIcon";
 import ThemeToggle from "@/components/ThemeToggle";

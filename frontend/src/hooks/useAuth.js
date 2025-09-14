@@ -1,8 +1,8 @@
 // useAuth.js
 import { useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { AuthContext } from '../contexts/AuthContext';
-import { AuthService } from '../services/authService';
+import { AuthContext } from '@/contexts/AuthContext';
+import { AuthService } from '@/services/AuthService';
 import { mergeLocalCartToBackend } from '@/utils/mergeLocalCartToBackend';
 import toast from 'react-hot-toast';
 import useAxios from "@/hooks/useAxios";

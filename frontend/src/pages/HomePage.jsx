@@ -1,6 +1,6 @@
 import React, { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import useAxios from "@/hooks/useAxios";
-import HeroBanner from "../components/HeroBanner";
+import HeroBanner from "@/components/HeroBanner";
 import CategoryScroller from "@/components/CategoryScroller";
 import ProductCard from "@/components/ProductCard";
 import { SessionStorageManager } from '@/utils/sessionStorageManager';
