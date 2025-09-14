@@ -8,7 +8,7 @@ import useAxios from "@/hooks/useAxios";
 import { motion } from "framer-motion"; 
 import { useNavigate } from "react-router-dom";
 import { SessionStorageManager } from "@/utils/sessionStorageManager";
-import FavoriteButton from "@components/FavoriteButton";
+import FavoriteButton from "@/components/FavoriteButton";
 import GlareHover from '@/components/GlareHover';
 
 const MotionCard = motion.create(Card);
