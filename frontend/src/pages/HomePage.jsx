@@ -114,7 +114,7 @@ const HomePage = () => {
 
           <br />
 
-          <div className="my-10" style={{ height: '200px', position: 'relative', overflow: 'hidden'}}>
+          <div className="my-10" style={{ height: '80px', position: 'relative', overflow: 'hidden'}}>
             <LogoLoop
               logos={techLogos}
               speed={100}
