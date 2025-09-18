@@ -61,7 +61,8 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     phone = models.CharField(
         unique=True,
         blank=True, 
-        null=True
+        null=True,
+        max_length=11
     )
     age = models.PositiveIntegerField(null=True, blank=True)
     address = models.TextField(

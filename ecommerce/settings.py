@@ -74,7 +74,7 @@ WSGI_APPLICATION = 'ecommerce.wsgi.application'
 
 
 # Database
-'''
+
 DATABASES = {
     'default': dj_database_url.config(
         default='postgres://postgres:12345@localhost:5432/EcommerceDB',
@@ -83,14 +83,15 @@ DATABASES = {
     )
 }
 
-'''
 
+'''
 DATABASES = {
     "default": dj_database_url.config(
         default=os.environ.get("DATABASE_URL")  # Render otomatik ekler
     )
 }
 
+'''
 # Password validation
 
 AUTH_PASSWORD_VALIDATORS = [

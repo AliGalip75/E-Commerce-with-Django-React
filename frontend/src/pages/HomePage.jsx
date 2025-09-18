@@ -48,6 +48,9 @@ const HomePage = () => {
         setCategories(categoryRes.data);
         setProducts(productRes.data);
 
+        console.log("categoryRes:", categoryRes.data);
+        console.log("productRes:", productRes.data);
+
       } catch (error) {
         console.error("Veri çekme hatası:", error);
       } finally {
@@ -160,7 +163,7 @@ const HomePage = () => {
           <br />
           
           <div id="targetDiv" className="flex flex-col">
-            <div class="flex justify-center">
+            <div className="flex justify-center">
               <ShinyText
                 text="Popüler Ürünler"
                 speed={3}
