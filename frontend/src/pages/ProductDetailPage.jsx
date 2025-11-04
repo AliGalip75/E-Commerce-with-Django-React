@@ -82,7 +82,7 @@ const ProductDetail = () => {
               <img
                 src={product.image}
                 alt={product.name}
-                className="w-full max-w-md rounded-2xl shadow-lg object-cover"
+                className="w-full max-w-xl rounded-2xl shadow-lg object-contain"
               />
             </motion.div>
 

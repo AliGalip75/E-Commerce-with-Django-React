@@ -127,7 +127,7 @@ const HomePage = () => {
               pauseOnHover
               scaleOnHover
               fadeOut
-              fadeOutColor="#030712"
+              fadeOutColor="zinc-50"
               ariaLabel="Technology partners"
             />
           </div>
